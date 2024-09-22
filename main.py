@@ -6,7 +6,6 @@ class Grafo:
         self.adjacencia = {}
 
     def inserir_grafo(self):
-        """Insere o grafo manualmente a partir de entrada do usuário"""
         num_vertices = int(input("Quantos vértices o grafo possui? "))
         self.vertices = [i for i in range(num_vertices)]
         self.adjacencia = {v: [] for v in self.vertices}
@@ -26,11 +25,9 @@ class Grafo:
                 self.adjacencia[v].append((u, peso))
 
     def existe_aresta(self, u, v):
-        """Verifica se existe aresta entre u e v"""
         return any(vertice == v for vertice, _ in self.adjacencia[u])
 
     def grau_vertice(self, v):
-        """Informa o grau de um vértice"""
         if self.orientado:
             grau_entrada = sum(1 for u in self.adjacencia if any(v == w for w, _ in self.adjacencia[u]))
             grau_saida = len(self.adjacencia[v])
@@ -39,11 +36,9 @@ class Grafo:
             return len(self.adjacencia[v])
 
     def adjacencia_vertice(self, v):
-        """Informa a adjacência de um vértice"""
         return [u for u, _ in self.adjacencia[v]]
 
     def grafo_ciclico(self):
-        """Verifica se o grafo contém ciclos - Utiliza DFS"""
         visitado = {v: False for v in self.vertices}
         def dfs(v, parent):
             visitado[v] = True
@@ -62,7 +57,6 @@ class Grafo:
         return False
 
     def grafo_conexo(self):
-        """Verifica se um grafo não-orientado é conexo - Utiliza BFS"""
         visitado = {v: False for v in self.vertices}
         fila = [self.vertices[0]]
         visitado[self.vertices[0]] = True
@@ -76,7 +70,6 @@ class Grafo:
 
         return all(visitado.values())
 
-# Exemplo de uso:
 orientado = input("O grafo é orientado? (s/n): ").strip().lower() == 's'
 grafo = Grafo(orientado)
 grafo.inserir_grafo()
