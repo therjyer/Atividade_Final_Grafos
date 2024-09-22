@@ -1,9 +1,12 @@
-#Universidade Federal do Pará
-##Instituto de Ciências Exatas e Naturais
-##Faculdade de Computação
-##Grafos
+# Universidade Federal do Pará
 
-#Trabalho Final
+## Instituto de Ciências Exatas e Naturais
+
+## Faculdade de Computação
+
+## Grafos
+
+# Trabalho Final
 
 O grupo de até 4 (quatro) integrantes deverá implementar um programa computacional, em linguagem de programação a sua escolha, que trabalhe os itens abaixo ao receber um grafo orientado (dı́grafo) ou não-orientado de entrada.
 
