@@ -29,6 +29,7 @@ class VerificationApp:
         
         tk.Button(self.root, text="Check Edge Existence", command=self.check_edge).pack()
         tk.Button(self.root, text="Check if Graph is Cyclic", command=self.check_if_cyclic).pack()
+        tk.Button(self.root, text="Check if Graph is Undirected and Connected", command=self.check_if_undirected_and_connected).pack()
 
     def get_selected_graph(self):
         graph_name = self.selected_graph.get()
@@ -94,6 +95,41 @@ class VerificationApp:
         else:
             messagebox.showinfo("Graph Cyclic Check", 
                 f"The graph does not contain a cycle.\nTotal vertices: {total_vertices}.")
+
+    def check_if_undirected_and_connected(self):
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+
+        def is_undirected():
+            for u in adjacency_matrix:
+                for v in adjacency_matrix[u]:
+                    if adjacency_matrix[u][v] != adjacency_matrix[v].get(u, 0):
+                        return False
+            return True
+
+        def is_connected():
+            visited = set()
+            def dfs(v):
+                visited.add(v)
+                for neighbor in adjacency_matrix[v]:
+                    if adjacency_matrix[v][neighbor] != 0 and neighbor not in visited:
+                        dfs(neighbor)
+
+            initial_vertex = next(iter(adjacency_matrix))
+            dfs(initial_vertex)
+
+            return len(visited) == len(adjacency_matrix)
+
+        if is_undirected():
+            if is_connected():
+                messagebox.showinfo("Graph Check", "The graph is undirected and connected.")
+            else:
+                messagebox.showinfo("Graph Check", "The graph is undirected but not connected.")
+        else:
+            messagebox.showinfo("Graph Check", "The graph is directed.")
 
 if __name__ == "__main__":
     root = tk.Tk()
