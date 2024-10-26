@@ -31,6 +31,7 @@ class VerificationApp:
         tk.Button(self.root, text="Check if Graph is Cyclic", command=self.check_if_cyclic).pack()
         tk.Button(self.root, text="Check if Graph is Undirected and Connected", command=self.check_if_undirected_and_connected).pack()
         tk.Button(self.root, text="Check Strongly Connected Components", command=self.check_strongly_connected_components).pack()
+        tk.Button(self.root, text="Generate a Topological Sort in a DAG", command=self.check_dag_and_topological_sort).pack()
 
     def get_selected_graph(self):
         graph_name = self.selected_graph.get()
@@ -63,27 +64,31 @@ class VerificationApp:
         adjacency_matrix = graph_info['adjacency_matrix']
         vertices = list(adjacency_matrix.keys())
         visited = set()
-        cycle_count = 0
+        visiting = set()
         cycle_vertices = set()
 
-        def has_cycle(v, visited, parent, path):
-            visited.add(v)
-            path.add(v)
+        def has_cycle(v):
+            if v in visiting:
+                return True
+            if v in visited:
+                return False
+
+            visiting.add(v)
             for neighbor in adjacency_matrix[v]:
                 if adjacency_matrix[v][neighbor] != 0:
-                    if neighbor not in visited:
-                        if has_cycle(neighbor, visited, v, path):
-                            return True
-                    elif parent != neighbor:
-                        cycle_vertices.update(path)
+                    if has_cycle(neighbor):
+                        cycle_vertices.add(v)
                         return True
-            path.remove(v)
+            
+            visiting.remove(v)
+            visited.add(v)
             return False
+
+        cycle_count = 0
 
         for vertex in vertices:
             if vertex not in visited:
-                path = set()
-                if has_cycle(vertex, visited, None, path):
+                if has_cycle(vertex):
                     cycle_count += 1
 
         total_vertices = len(vertices)
@@ -91,7 +96,6 @@ class VerificationApp:
         if cycle_count > 0:
             messagebox.showinfo("Graph Cyclic Check", 
                 f"The graph contains {cycle_count} cycle(s).\n"
-                f"Total vertices: {total_vertices}\n"
                 f"Vertices involved in cycle(s): {', '.join(cycle_vertices)}.")
         else:
             messagebox.showinfo("Graph Cyclic Check", 
@@ -197,6 +201,69 @@ class VerificationApp:
         messagebox.showinfo("Strongly Connected Components", 
             f"Number of strongly connected components: {num_components}\n\n{component_info}")
 
+    def check_dag_and_topological_sort(self):
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+
+        def is_directed():
+            for u in adjacency_matrix:
+                for v in adjacency_matrix[u]:
+                    if adjacency_matrix[u][v] != adjacency_matrix[v].get(u, 0):
+                        return True
+            return False
+
+        def is_acyclic():
+            visited = set()
+            recursion_stack = set()
+
+            def dfs(v):
+                visited.add(v)
+                recursion_stack.add(v)
+                for neighbor in adjacency_matrix[v]:
+                    if adjacency_matrix[v][neighbor] != 0:
+                        if neighbor not in visited:
+                            if dfs(neighbor):
+                                return True
+                        elif neighbor in recursion_stack:
+                            return True
+                recursion_stack.remove(v)
+                return False
+
+            for vertex in adjacency_matrix:
+                if vertex not in visited:
+                    if dfs(vertex):
+                        return False
+            return True
+
+        def topological_sort():
+            visited = set()
+            stack = []
+
+            def dfs(v):
+                visited.add(v)
+                for neighbor in adjacency_matrix[v]:
+                    if adjacency_matrix[v][neighbor] != 0 and neighbor not in visited:
+                        dfs(neighbor)
+                stack.append(v)
+
+            for vertex in adjacency_matrix:
+                if vertex not in visited:
+                    dfs(vertex)
+
+            return stack[::-1]
+
+        if is_directed():
+            if is_acyclic():
+                topo_sort = topological_sort()
+                messagebox.showinfo("DAG and Topological Sort", 
+                    f"The graph is a directed acyclic graph (DAG).\nTopological Order: {', '.join(topo_sort)}")
+            else:
+                messagebox.showerror("Cyclic Graph", "The graph is directed but contains a cycle, so it is not a DAG.")
+        else:
+            messagebox.showerror("Not a Directed Graph", "The graph is not directed.")
 
 if __name__ == "__main__":
     root = tk.Tk()
