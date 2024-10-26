@@ -28,8 +28,6 @@ class VerificationApp:
         self.graph_menu.pack()
         
         tk.Button(self.root, text="Check Edge Existence", command=self.check_edge).pack()
-        tk.Button(self.root, text="Check Vertex Degree", command=self.check_vertex_degree).pack()
-        tk.Button(self.root, text="Check Vertex Adjacency", command=self.check_vertex_adjacency).pack()
 
     def get_selected_graph(self):
         graph_name = self.selected_graph.get()
@@ -53,38 +51,6 @@ class VerificationApp:
             messagebox.showinfo("Edge Existence", f"The edge ({vertex1} - {vertex2}) exists with weight {adjacency_matrix[vertex1][vertex2]}.")
         else:
             messagebox.showinfo("Edge Existence", f"The edge ({vertex1} - {vertex2}) does not exist.")
-
-    def check_vertex_degree(self):
-        graph_info = self.get_selected_graph()
-        if not graph_info:
-            return
-        vertex = simpledialog.askstring("Vertex", "Enter the vertex:")
-        if vertex:
-            adjacency_matrix = graph_info['adjacency_matrix']
-            if vertex in adjacency_matrix:
-                degree = sum(1 for v in adjacency_matrix[vertex] if adjacency_matrix[vertex][v] != 0)
-                messagebox.showinfo("Vertex Degree", f"The degree of vertex {vertex} is {degree}.")
-            else:
-                messagebox.showerror("Error", f"Vertex {vertex} does not exist in the graph.")
-
-    def check_vertex_adjacency(self):
-        graph_info = self.get_selected_graph()
-        if not graph_info:
-            return
-
-        vertex = simpledialog.askstring("Vertex", "Enter the vertex to check adjacency:")
-
-        if vertex:
-            adjacency_matrix = graph_info['adjacency_matrix']
-            if vertex in adjacency_matrix:
-                adjacent_vertices = [v for v in adjacency_matrix[vertex] if adjacency_matrix[vertex][v] != 0]
-                if adjacent_vertices:
-                    messagebox.showinfo("Vertex Adjacency", f"Vertices adjacent to {vertex}: {', '.join(adjacent_vertices)}.")
-                else:
-                    messagebox.showinfo("Vertex Adjacency", f"Vertex {vertex} has no adjacent vertices.")
-            else:
-                messagebox.showerror("Error", f"Vertex {vertex} does not exist in the graph.")
-
 
 if __name__ == "__main__":
     root = tk.Tk()
