@@ -15,7 +15,7 @@ Observação: Ao receber o grafo de entrada, o programa deverá ser capaz de 
 1. Verificar a existência de uma dada aresta.*
 2. Informar o grau de um dado vértice.*
 3. Informar a adjacência de um dado vértice.*
-4. Verificar se um grafo é cı́clico.
+4. Verificar se um grafo é cı́clico.*
 5. Verificar se um grafo não-orientado é conexo.
 6. Informar quantos e quais são os componentes fortemente conexos de um dı́grafo.
 7. Gerar uma ordenação topológica de um dı́grafo acı́clico.
