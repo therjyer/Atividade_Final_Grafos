@@ -30,6 +30,7 @@ class VerificationApp:
         tk.Button(self.root, text="Check Edge Existence", command=self.check_edge).pack()
         tk.Button(self.root, text="Check if Graph is Cyclic", command=self.check_if_cyclic).pack()
         tk.Button(self.root, text="Check if Graph is Undirected and Connected", command=self.check_if_undirected_and_connected).pack()
+        tk.Button(self.root, text="Check Strongly Connected Components", command=self.check_strongly_connected_components).pack()
 
     def get_selected_graph(self):
         graph_name = self.selected_graph.get()
@@ -130,6 +131,72 @@ class VerificationApp:
                 messagebox.showinfo("Graph Check", "The graph is undirected but not connected.")
         else:
             messagebox.showinfo("Graph Check", "The graph is directed.")
+
+    def check_strongly_connected_components(self):
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+
+        def is_directed():
+            for u in adjacency_matrix:
+                for v in adjacency_matrix[u]:
+                    if adjacency_matrix[u][v] != adjacency_matrix[v].get(u, 0):
+                        return True
+            return False
+
+        if not is_directed():
+            messagebox.showerror("Error", "The graph is not directed. Strongly connected components only apply to directed graphs.")
+            return
+
+        def dfs(v, visited, stack=None):
+            visited.add(v)
+            for neighbor in adjacency_matrix[v]:
+                if adjacency_matrix[v][neighbor] != 0 and neighbor not in visited:
+                    dfs(neighbor, visited, stack)
+            if stack is not None:
+                stack.append(v)
+
+        def transpose_graph():
+            transposed = {v: {} for v in adjacency_matrix}
+            for u in adjacency_matrix:
+                for v in adjacency_matrix[u]:
+                    if adjacency_matrix[u][v] != 0:
+                        transposed[v][u] = adjacency_matrix[u][v]
+            return transposed
+
+        visited = set()
+        stack = []
+        for vertex in adjacency_matrix:
+            if vertex not in visited:
+                dfs(vertex, visited, stack)
+
+        transposed_graph = transpose_graph()
+
+        visited.clear()
+        strongly_connected_components = []
+        
+        def dfs_on_transposed(v, visited, component):
+            visited.add(v)
+            component.append(v)
+            for neighbor in transposed_graph[v]:
+                if transposed_graph[v][neighbor] != 0 and neighbor not in visited:
+                    dfs_on_transposed(neighbor, visited, component)
+
+        while stack:
+            vertex = stack.pop()
+            if vertex not in visited:
+                component = []
+                dfs_on_transposed(vertex, visited, component)
+                strongly_connected_components.append(component)
+
+        num_components = len(strongly_connected_components)
+        component_info = "\n".join([f"Component {i+1}: {', '.join(component)}" for i, component in enumerate(strongly_connected_components)])
+
+        messagebox.showinfo("Strongly Connected Components", 
+            f"Number of strongly connected components: {num_components}\n\n{component_info}")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
