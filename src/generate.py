@@ -266,13 +266,61 @@ class VerificationApp:
             messagebox.showerror("Error", "One or both vertices do not exist in the graph.")
             return
 
-        path, cost = self.dijkstra_shortest_path(adjacency_matrix, start_vertex, end_vertex)
+        if self.has_negative_cycle(adjacency_matrix, start_vertex):
+            self.log_message("Graph has a negative cycle. Using Bellman-Ford for shortest path.")
+            path, cost = self.bellman_ford_shortest_path(adjacency_matrix, start_vertex, end_vertex)
+        else:
+            path, cost = self.dijkstra_shortest_path(adjacency_matrix, start_vertex, end_vertex)
+
         if path:
             self.log_message(f"Lowest cost path from {start_vertex} to {end_vertex}: " + " -> ".join(path) + f" with cost {cost}")
             messagebox.showinfo("Lowest Cost Path", f"Lowest cost path from {start_vertex} to {end_vertex}: " + " -> ".join(path) + f" with cost {cost}")
         else:
             self.log_message(f"No path exists between {start_vertex} and {end_vertex}.")
             messagebox.showerror("No Path", f"No path exists between {start_vertex} and {end_vertex}.")
+
+    def has_negative_cycle(self, adjacency_matrix, start):
+        min_costs = {vertex: float('inf') for vertex in adjacency_matrix}
+        min_costs[start] = 0
+
+        vertices = list(adjacency_matrix.keys())
+        for _ in range(len(vertices) - 1):
+            for u in adjacency_matrix:
+                for v, weight in adjacency_matrix[u].items():
+                    if weight != 0 and min_costs[u] != float('inf') and min_costs[u] + weight < min_costs[v]:
+                        min_costs[v] = min_costs[u] + weight
+
+        # Check for negative weight cycles
+        for u in adjacency_matrix:
+            for v, weight in adjacency_matrix[u].items():
+                if weight != 0 and min_costs[u] != float('inf') and min_costs[u] + weight < min_costs[v]:
+                    return True  # Negative cycle detected
+
+        return False
+
+    def bellman_ford_shortest_path(self, adjacency_matrix, start, goal):
+        min_costs = {vertex: float('inf') for vertex in adjacency_matrix}
+        predecessors = {vertex: None for vertex in adjacency_matrix}
+        min_costs[start] = 0
+
+        vertices = list(adjacency_matrix.keys())
+        for _ in range(len(vertices) - 1):
+            for u in adjacency_matrix:
+                for v, weight in adjacency_matrix[u].items():
+                    if weight != 0 and min_costs[u] != float('inf') and min_costs[u] + weight < min_costs[v]:
+                        min_costs[v] = min_costs[u] + weight
+                        predecessors[v] = u
+
+        if min_costs[goal] == float('inf'):
+            return None, float('inf')
+
+        path = []
+        current = goal
+        while current is not None:
+            path.insert(0, current)
+            current = predecessors[current]
+
+        return path, min_costs[goal]
 
     def dijkstra_shortest_path(self, adjacency_matrix, start, goal):
         min_costs = {vertex: float('inf') for vertex in adjacency_matrix}
