@@ -62,8 +62,18 @@ class VerificationApp:
         vertices = [v.strip() for v in vertices]
 
         for i, v1 in enumerate(vertices):
+            if v1 not in adjacency_matrix:
+                self.log_message(f"Vértice {v1} não encontrado no grafo.")
+                messagebox.showerror("Erro", f"Vértice {v1} não encontrado no grafo.")
+                return
+            
             for v2 in vertices[i+1:]:
-                if v1 in adjacency_matrix and v2 in adjacency_matrix[v1] and adjacency_matrix[v1][v2] != 0:
+                if v2 not in adjacency_matrix:
+                    self.log_message(f"Vértice {v2} não encontrado no grafo.")
+                    messagebox.showerror("Erro", f"Vértice {v2} não encontrado no grafo.")
+                    return
+                
+                if adjacency_matrix[v1].get(v2, 0) != 0:
                     self.log_message(f"Vértices {v1} e {v2} são adjacentes. O conjunto não é independente.")
                     messagebox.showerror("Não é Conjunto Independente", f"Vértices {v1} e {v2} são adjacentes. O conjunto não é independente.")
                     return

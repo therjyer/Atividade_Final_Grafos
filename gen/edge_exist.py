@@ -49,15 +49,24 @@ class VerificationApp:
             return
         vertex1 = simpledialog.askstring("Vértice", "Digite o vértice inicial da aresta:")
         vertex2 = simpledialog.askstring("Vértice", "Digite o vértice final da aresta:")
+        
         if vertex1 and vertex2:
-            self.check_edge_existence(graph_info, vertex1, vertex2)
+            self.log_message(f"Verificando a existência da aresta entre {vertex1} e {vertex2}...")
+            self.check_edge_existence(graph_info, vertex1.strip(), vertex2.strip())
     
     def check_edge_existence(self, graph_info, vertex1, vertex2):
         adjacency_matrix = graph_info['adjacency_matrix']
-        if vertex1 in adjacency_matrix and vertex2 in adjacency_matrix[vertex1] and adjacency_matrix[vertex1][vertex2] != 0:
-            messagebox.showinfo("Existência da Aresta", f"A aresta ({vertex1} - {vertex2}) existe com peso {adjacency_matrix[vertex1][vertex2]}.")
+        
+        if vertex1 in adjacency_matrix and vertex2 in adjacency_matrix and \
+           adjacency_matrix[vertex1].get(vertex2, 0) != 0:
+            weight = adjacency_matrix[vertex1][vertex2]
+            message = f"A aresta ({vertex1} - {vertex2}) existe com peso {weight}."
+            self.log_message(message)
+            messagebox.showinfo("Existência da Aresta", message)
         else:
-            messagebox.showinfo("Existência da Aresta", f"A aresta ({vertex1} - {vertex2}) não existe.")
+            message = f"A aresta ({vertex1} - {vertex2}) não existe."
+            self.log_message(message)
+            messagebox.showinfo("Existência da Aresta", message)
 
 if __name__ == "__main__":
     root = tk.Tk()
