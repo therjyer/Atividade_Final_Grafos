@@ -34,7 +34,21 @@ Observação: Ao receber o grafo de entrada, o programa deverá ser capaz de 
 <h3 style="text-align:center;">Dependências:</h3>
 
 ```
+pip install tk
+pip install scipy
 pip install numpy
 pip install networkx
 pip install matplotlib
+```
+
+<h3 style="text-align:center;">Iniciar o projeto:</h3>
+
+```
+py main.py
+```
+
+<p style="text-align:center;">Caso tenhas algum problema com a inicialização:</p>
+
+```
+python main.py
 ```
