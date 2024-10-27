@@ -60,6 +60,7 @@ class VerificationApp:
             return
 
         test_set = {v.strip() for v in vertices_input.split(',')}
+        self.log_message(f"Conjunto de vértices fornecido: {test_set}")
         
         covered_vertices = set(test_set)
 
@@ -70,6 +71,7 @@ class VerificationApp:
                         covered_vertices.add(neighbor)
 
         if covered_vertices == all_vertices:
+            self.log_message("O conjunto especificado cobre todos os vértices.")
             for vertex in test_set:
                 temp_set = test_set - {vertex}
                 temp_covered = set(temp_set)
