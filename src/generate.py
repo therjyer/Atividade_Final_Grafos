@@ -27,6 +27,7 @@ class VerificationApp:
         self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, *self.graph_names)
         self.graph_menu.pack()
         
+        tk.Button(self.root, text="Check Edge Existence", command=self.check_edge).pack()
         tk.Button(self.root, text="Check Vertex Degree", command=self.check_vertex_degree).pack()
         tk.Button(self.root, text="Check Vertex Adjacency", command=self.check_vertex_adjacency).pack()
 
@@ -36,6 +37,22 @@ class VerificationApp:
             messagebox.showerror("Error", "Please select a valid graph name.")
             return None
         return self.graph_data[graph_name]
+    
+    def check_edge(self):
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+        vertex1 = simpledialog.askstring("Vertex", "Enter the starting vertex of the edge:")
+        vertex2 = simpledialog.askstring("Vertex", "Enter the ending vertex of the edge:")
+        if vertex1 and vertex2:
+            self.check_edge_existence(graph_info, vertex1, vertex2)
+    
+    def check_edge_existence(self, graph_info, vertex1, vertex2):
+        adjacency_matrix = graph_info['adjacency_matrix']
+        if vertex1 in adjacency_matrix and vertex2 in adjacency_matrix[vertex1] and adjacency_matrix[vertex1][vertex2] != 0:
+            messagebox.showinfo("Edge Existence", f"The edge ({vertex1} - {vertex2}) exists with weight {adjacency_matrix[vertex1][vertex2]}.")
+        else:
+            messagebox.showinfo("Edge Existence", f"The edge ({vertex1} - {vertex2}) does not exist.")
 
     def check_vertex_degree(self):
         graph_info = self.get_selected_graph()

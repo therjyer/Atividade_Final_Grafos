@@ -27,11 +27,18 @@ class VerificationApp:
         self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, *self.graph_names)
         self.graph_menu.pack()
         
-        tk.Button(self.root, text="Check Edge Existence", command=self.check_edge).pack()
+        self.log_text = tk.Text(self.root, height=15, width=50)
+        self.log_text.pack()
+        
         tk.Button(self.root, text="Check if Graph is Cyclic", command=self.check_if_cyclic).pack()
         tk.Button(self.root, text="Check if Graph is Undirected and Connected", command=self.check_if_undirected_and_connected).pack()
         tk.Button(self.root, text="Check Strongly Connected Components", command=self.check_strongly_connected_components).pack()
         tk.Button(self.root, text="Generate a Topological Sort in a DAG", command=self.check_dag_and_topological_sort).pack()
+        tk.Button(self.root, text="Check if Graph is Eulerian", command=self.check_eulerian).pack()
+
+    def log_message(self, message):
+        self.log_text.insert(tk.END, message + "\n")
+        self.log_text.see(tk.END)
 
     def get_selected_graph(self):
         graph_name = self.selected_graph.get()
@@ -39,22 +46,6 @@ class VerificationApp:
             messagebox.showerror("Error", "Please select a valid graph name.")
             return None
         return self.graph_data[graph_name]
-
-    def check_edge(self):
-        graph_info = self.get_selected_graph()
-        if not graph_info:
-            return
-        vertex1 = simpledialog.askstring("Vertex", "Enter the starting vertex of the edge:")
-        vertex2 = simpledialog.askstring("Vertex", "Enter the ending vertex of the edge:")
-        if vertex1 and vertex2:
-            self.check_edge_existence(graph_info, vertex1, vertex2)
-
-    def check_edge_existence(self, graph_info, vertex1, vertex2):
-        adjacency_matrix = graph_info['adjacency_matrix']
-        if vertex1 in adjacency_matrix and vertex2 in adjacency_matrix[vertex1] and adjacency_matrix[vertex1][vertex2] != 0:
-            messagebox.showinfo("Edge Existence", f"The edge ({vertex1} - {vertex2}) exists with weight {adjacency_matrix[vertex1][vertex2]}.")
-        else:
-            messagebox.showinfo("Edge Existence", f"The edge ({vertex1} - {vertex2}) does not exist.")
 
     def check_if_cyclic(self):
         graph_info = self.get_selected_graph()
@@ -264,6 +255,158 @@ class VerificationApp:
                 messagebox.showerror("Cyclic Graph", "The graph is directed but contains a cycle, so it is not a DAG.")
         else:
             messagebox.showerror("Not a Directed Graph", "The graph is not directed.")
+
+    def check_eulerian(self):
+        self.log_text.delete(1.0, tk.END)
+        self.log_message("Starting Eulerian graph verification...")
+
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+
+        def is_directed():
+            for u in adjacency_matrix:
+                for v in adjacency_matrix[u]:
+                    if adjacency_matrix[u][v] != adjacency_matrix[v].get(u, 0):
+                        return True
+            return False
+
+        def is_directed_eulerian():
+            self.log_message("Checking if all vertices have equal in-degree and out-degree...")
+
+            in_degree = {v: 0 for v in adjacency_matrix}
+            out_degree = {v: 0 for v in adjacency_matrix}
+
+            for u in adjacency_matrix:
+                for v in adjacency_matrix[u]:
+                    if adjacency_matrix[u][v] != 0:
+                        out_degree[u] += 1
+                        in_degree[v] += 1
+
+            for v in adjacency_matrix:
+                self.log_message(f"Vertex {v}: in-degree = {in_degree[v]}, out-degree = {out_degree[v]}.")
+                if in_degree[v] != out_degree[v]:
+                    self.log_message(f"Vertex {v} does not have equal in-degree and out-degree. The graph is not Eulerian.")
+                    return False
+
+            def is_weakly_connected():
+                visited = set()
+                def dfs(v):
+                    visited.add(v)
+                    for neighbor in adjacency_matrix[v]:
+                        if adjacency_matrix[v][neighbor] != 0 and neighbor not in visited:
+                            dfs(neighbor)
+
+                initial_vertex = next((v for v in adjacency_matrix if any(adjacency_matrix[v].values())), None)
+                if not initial_vertex:
+                    return False
+                dfs(initial_vertex)
+
+                return all(v in visited for v in adjacency_matrix if any(adjacency_matrix[v].values()))
+
+            if not is_weakly_connected():
+                self.log_message("The graph is not weakly connected. The graph is not Eulerian.")
+                return False
+
+            return True
+
+        def is_undirected_eulerian():
+            self.log_message("Checking if all vertices have an even degree...")
+
+            def is_connected():
+                visited = set()
+                def dfs(v):
+                    visited.add(v)
+                    for neighbor in adjacency_matrix[v]:
+                        if adjacency_matrix[v][neighbor] != 0 and neighbor not in visited:
+                            dfs(neighbor)
+
+                start_vertex = next((v for v in adjacency_matrix if any(adjacency_matrix[v].values())), None)
+                if not start_vertex:
+                    return False
+                dfs(start_vertex)
+
+                return all(v in visited for v in adjacency_matrix if any(adjacency_matrix[v].values()))
+
+            for v in adjacency_matrix:
+                degree = sum(1 for neighbor in adjacency_matrix[v] if adjacency_matrix[v][neighbor] != 0)
+                self.log_message(f"Vertex {v} has degree {degree}.")
+                if degree % 2 != 0:
+                    self.log_message(f"Vertex {v} has an odd degree. The graph is not Eulerian.")
+                    return False
+
+            if not is_connected():
+                self.log_message("The graph is not connected. The graph is not Eulerian.")
+                return False
+
+            self.log_message("All vertices have an even degree and the graph is connected.")
+            return True
+
+        def hierholzer_algorithm_directed():
+            self.log_message("Finding Eulerian cycle using Hierholzer's Algorithm (Directed)...")
+
+            edges = {u: [v for v in adjacency_matrix[u] if adjacency_matrix[u][v] != 0] for u in adjacency_matrix}
+            cycle = []
+            stack = []
+            current = next(iter(edges))
+
+            while edges[current] or stack:
+                if not edges[current]:
+                    cycle.append(current)
+                    current = stack.pop()
+                else:
+                    stack.append(current)
+                    next_vertex = edges[current].pop()
+                    current = next_vertex
+
+            cycle.append(current)
+            return cycle
+
+        def hierholzer_algorithm():
+            self.log_message("Finding Eulerian cycle using Hierholzer's Algorithm...")
+
+            edges = {u: [v for v in adjacency_matrix[u] if adjacency_matrix[u][v] != 0] for u in adjacency_matrix}
+            cycle = []
+            stack = []
+            current = next(iter(edges))
+
+            while edges[current] or stack:
+                if not edges[current]:
+                    cycle.append(current)
+                    current = stack.pop()
+                else:
+                    stack.append(current)
+                    next_vertex = edges[current].pop()
+                    edges[next_vertex].remove(current)
+                    current = next_vertex
+
+            cycle.append(current)
+            return cycle
+
+        if is_directed():
+            if is_directed_eulerian():
+                self.log_message("The directed graph is Eulerian.")
+                cycle = hierholzer_algorithm_directed()
+                cycle_str = " -> ".join(cycle)
+                self.log_message(f"Eulerian Cycle found: {cycle_str}")
+                messagebox.showinfo("Eulerian Graph", f"The directed graph is Eulerian.\nEulerian Cycle: {cycle_str}")
+            else:
+                self.log_message("The directed graph is not Eulerian.")
+                messagebox.showerror("Not Eulerian", "The directed graph is not Eulerian.")
+        else:
+            eulerian = is_undirected_eulerian()
+            if eulerian:
+                self.log_message("The undirected graph is Eulerian.")
+                cycle = hierholzer_algorithm()
+                cycle_str = " -> ".join(cycle)
+                self.log_message(f"Eulerian Cycle found: {cycle_str}")
+                messagebox.showinfo("Eulerian Graph", f"The undirected graph is Eulerian.\nEulerian Cycle: {cycle_str}")
+            else:
+                self.log_message("The undirected graph is not Eulerian.")
+                messagebox.showerror("Not Eulerian", "The undirected graph is not Eulerian.")
+
 
 if __name__ == "__main__":
     root = tk.Tk()

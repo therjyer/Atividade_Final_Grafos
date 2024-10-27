@@ -90,3 +90,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = GraphApp(root)
     root.mainloop()
+    
+# Falta adicionar uma parte em que um grafo qualquer no json pode ser alterado ou removido
