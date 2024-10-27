@@ -20,8 +20,19 @@ Observação: Ao receber o grafo de entrada, o programa deverá ser capaz de 
 6. ~~Informar quantos e quais são os componentes fortemente conexos de um dı́grafo.~~
 7. ~~Gerar uma ordenação topológica de um dı́grafo acı́clico.~~
 8. ~~Verificar se um grafo é euleriano. Caso seja possı́vel, informar um ciclo euleriano.~~
-9. Verificar se um dado conjunto de vértices é: (i) um conjunto independente; (ii) um clique; (iii) um conjunto dominante.
+9. Verificar se um dado conjunto de vértices é:
+   1.  (i) um conjunto independente;
+   2.  (ii) um clique;
+   3.  (iii) um conjunto dominante.
 10. Verificar se um grafo é planar.
 11. Caso seja possı́vel, encontrar um caminho mais curto (grafo não-ponderado) ou de menor custo (grafo ponderado) entre dois vértices.
 12. Encontrar uma árvore geradora mı́nima de um grafo ponderado. Apenas grafos não-orientados serão usados neste item.
 13. Implementar o Algoritmo Húngaro. Esse algoritmo será testado em um grafo bipartido completo ponderado.
+
+<h3 style="text-align:center;">Dependências:</h3>
+
+```
+pip install numpy
+pip install networkx
+pip install matplotlib
+```

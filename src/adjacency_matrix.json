@@ -202,5 +202,31 @@
                 "C": 0
             }
         }
+    },
+    "graph_bipartite_complete_weighted": {
+        "type": "directed",
+        "has_weights": true,
+        "adjacency_matrix": {
+            "X1": {
+                "X1": 0,
+                "Y1": 5,
+                "Y2": 3
+            },
+            "X2": {
+                "X1": 4,
+                "Y1": 0,
+                "Y2": 2
+            },
+            "Y1": {
+                "X1": 0,
+                "Y1": 0,
+                "Y2": 1
+            },
+            "Y2": {
+                "X1": 0,
+                "Y1": 6,
+                "Y2": 0
+            }
+        }
     }
 }

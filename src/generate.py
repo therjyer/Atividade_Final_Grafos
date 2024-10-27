@@ -30,6 +30,7 @@ class VerificationApp:
         tk.Button(self.root, text="Check Edge Existence", command=self.check_edge).pack()
         tk.Button(self.root, text="Check Vertex Degree", command=self.check_vertex_degree).pack()
         tk.Button(self.root, text="Check Vertex Adjacency", command=self.check_vertex_adjacency).pack()
+        tk.Button(self.root, text="Check Independent Vertex Set", command=self.check_independent_set).pack()
 
     def get_selected_graph(self):
         graph_name = self.selected_graph.get()
@@ -85,6 +86,33 @@ class VerificationApp:
             else:
                 messagebox.showerror("Error", f"Vertex {vertex} does not exist in the graph.")
 
+    def check_independent_set(self):
+        self.log_text.delete(1.0, tk.END)  # Limpar o log anterior
+        self.log_message("Starting independent set verification...")
+
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+
+        vertices_input = simpledialog.askstring("Input", "Enter the set of vertices (comma separated):")
+        if not vertices_input:
+            self.log_message("No vertices provided.")
+            return
+
+        vertices = vertices_input.split(',')
+        vertices = [v.strip() for v in vertices]
+
+        for i, v1 in enumerate(vertices):
+            for v2 in vertices[i+1:]:
+                if v1 in adjacency_matrix and v2 in adjacency_matrix[v1] and adjacency_matrix[v1][v2] != 0:
+                    self.log_message(f"Vertices {v1} and {v2} are adjacent. The set is not independent.")
+                    messagebox.showerror("Not Independent Set", f"Vertices {v1} and {v2} are adjacent. The set is not independent.")
+                    return
+
+        self.log_message("The set is independent.")
+        messagebox.showinfo("Independent Set", "The set is independent.")
 
 if __name__ == "__main__":
     root = tk.Tk()
