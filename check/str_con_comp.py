@@ -1,4 +1,4 @@
-import tkinter as tk
+import tkinter as tk 
 from tkinter import messagebox
 import json
 import os
@@ -44,6 +44,9 @@ class VerificationApp:
         return self.graph_data[graph_name]
 
     def check_strongly_connected_components(self):
+        self.log_text.delete(1.0, tk.END)
+        self.log_message("Iniciando a verificação de componentes fortemente conectados...")
+
         graph_info = self.get_selected_graph()
         if not graph_info:
             return
@@ -81,9 +84,11 @@ class VerificationApp:
         stack = []
         for vertex in adjacency_matrix:
             if vertex not in visited:
+                self.log_message(f"Executando DFS a partir do vértice: {vertex}")
                 dfs(vertex, visited, stack)
 
         transposed_graph = transpose_graph()
+        self.log_message("Grafo transposto criado.")
 
         visited.clear()
         strongly_connected_components = []
@@ -99,11 +104,15 @@ class VerificationApp:
             vertex = stack.pop()
             if vertex not in visited:
                 component = []
+                self.log_message(f"Executando DFS no grafo transposto a partir do vértice: {vertex}")
                 dfs_on_transposed(vertex, visited, component)
                 strongly_connected_components.append(component)
 
         num_components = len(strongly_connected_components)
         component_info = "\n".join([f"Componente {i+1}: {', '.join(component)}" for i, component in enumerate(strongly_connected_components)])
+
+        self.log_message(f"Número de componentes fortemente conectados: {num_components}")
+        self.log_message(component_info)
 
         messagebox.showinfo("Componentes Fortemente Conectados", 
             f"Número de componentes fortemente conectados: {num_components}\n\n{component_info}")
