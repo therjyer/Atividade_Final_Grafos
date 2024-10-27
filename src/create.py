@@ -69,11 +69,10 @@ class GraphApp:
         
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
+        graphs = {}
         if os.path.exists(file_path):
             with open(file_path, "r") as f:
                 graphs = json.load(f)
-        else:
-            graphs = {}
 
         graphs[self.graph_name] = {
             "type": self.graph_type,
@@ -81,10 +80,12 @@ class GraphApp:
             "adjacency_matrix": self.adjacency_matrix
         }
 
-        with open(file_path, "w") as f:
-            json.dump(graphs, f, indent=4)
-        
-        messagebox.showinfo("Salvo", f"Grafo '{self.graph_name}' salvo em adjacency_matrix.json")
+        try:
+            with open(file_path, "w") as f:
+                json.dump(graphs, f, indent=4)
+            messagebox.showinfo("Salvo", f"Grafo '{self.graph_name}' salvo em adjacency_matrix.json")
+        except Exception as e:
+            messagebox.showerror("Erro", f"Falha ao salvar o grafo: {e}")
 
 
 if __name__ == "__main__":

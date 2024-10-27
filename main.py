@@ -13,25 +13,37 @@ class MainApp:
         tk.Button(self.root, text="Visualizar Grafo", command=self.visualize_graph).pack(pady=5)
         tk.Button(self.root, text="Deletar Grafo", command=self.delete_graph).pack(pady=5)
         tk.Button(self.root, text="Fazer verificações", command=self.check_graph).pack(pady=5)
-        tk.Button(self.root, text="Fazer perguntas", command=self.generate_graph).pack(pady=5)
+        tk.Button(self.root, text="Fazer perguntas", command=self.quest_graph).pack(pady=5)
 
     def create_graph(self):
-        subprocess.run(["python", "./src/graph.py"])
+        result = subprocess.run(["python", "create.py"], capture_output=True, text=True, cwd="./src")
+        print(result.stdout)
+        print(result.stderr)
 
     def edit_graph(self):
-        subprocess.run(["python", "./src/change.py"])
-
+        result = subprocess.run(["python", "change.py"], capture_output=True, text=True, cwd="./src")
+        print(result.stdout)
+        print(result.stderr)
+    
     def visualize_graph(self):
-        subprocess.run(["python", "./src/draw.py"])
+        result = subprocess.run(["python", "draw.py"], capture_output=True, text=True, cwd="./src")
+        print(result.stdout)
+        print(result.stderr)
 
     def delete_graph(self):
-        subprocess.run(["python", "./src/erase.py"])
+        result = subprocess.run(["python", "erase.py"], capture_output=True, text=True, cwd="./src")
+        print(result.stdout)
+        print(result.stderr)
     
     def check_graph(self):
-        subprocess.run(["python", "./src/check.py"])
+        result = subprocess.run(["python", "check.py"], capture_output=True, text=True, cwd="./src")
+        print(result.stdout)
+        print(result.stderr)
     
-    def generate_graph(self):
-        subprocess.run(["python", "./src/generate.py"])
+    def quest_graph(self):
+        result = subprocess.run(["python", "quest.py"], capture_output=True, text=True, cwd="./src")
+        print(result.stdout)
+        print(result.stderr)
 
 if __name__ == "__main__":
     root = tk.Tk()

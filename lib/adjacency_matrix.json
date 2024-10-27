@@ -1,19 +1,43 @@
 {
-    "a": {
+    "Grafo_Unique_01": { 
         "type": "directed",
-        "has_weights": false,
+        "has_weights": true,
         "adjacency_matrix": {
-            "a": {
-                "a": 1
+            "A": {
+                "A": 0,
+                "B": 2,
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 4
+            },
+            "C": {
+                "A": 0,
+                "B": 0,
+                "C": 0
             }
         }
     },
-    "b": {
-        "type": "undirected",
+    "Grafo_Bipartido_01": { 
+        "type": "bipartite",
         "has_weights": true,
         "adjacency_matrix": {
-            "b": {
-                "b": 3
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 3
+            },
+            "B": {
+                "A": 2,
+                "B": 0,
+                "C": 4
+            },
+            "C": {
+                "A": 5,
+                "B": 6,
+                "C": 0
             }
         }
     }

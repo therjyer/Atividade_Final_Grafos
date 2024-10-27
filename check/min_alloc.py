@@ -1,4 +1,5 @@
 import tkinter as tk
+from scipy.optimize import linear_sum_assignment
 from tkinter import messagebox
 import json
 import os
@@ -30,7 +31,7 @@ class VerificationApp:
         self.log_text = tk.Text(self.root, height=15, width=50)
         self.log_text.pack()
         
-        tk.Button(self.root, text="Encontrar Alocação Mínima (Hungarian)", command=self.find_minimum_allocation).pack()
+        tk.Button(self.root, text="Encontrar Alocação Mínima", command=self.find_minimum_allocation).pack()
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
