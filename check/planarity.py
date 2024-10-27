@@ -1,4 +1,4 @@
-import tkinter as tk
+import tkinter as tk 
 from tkinter import messagebox
 import json
 import os
@@ -45,6 +45,9 @@ class VerificationApp:
         return self.graph_data[graph_name]
 
     def check_planarity(self):
+        self.log_text.delete(1.0, tk.END)
+        self.log_message("Iniciando a verificação de planaridade...")
+
         graph_info = self.get_selected_graph()
         if not graph_info:
             return
@@ -54,29 +57,35 @@ class VerificationApp:
         v = len(vertices)
         e = sum(len([n for n in adjacency_matrix[vertex] if adjacency_matrix[vertex][n] != 0]) for vertex in vertices) // 2
 
+        self.log_message(f"Número de vértices: {v}, Número de arestas: {e}")
+
         if e > 3 * v - 6:
             self.log_message("O grafo não é planar pela fórmula de Euler.")
             messagebox.showinfo("Verificação de Planaridade", "O grafo não é planar pela fórmula de Euler.")
             return
 
         def contains_k5_k33(graph):
+            self.log_message("Verificando se o grafo contém subgrafos homeomorfos a K5 ou K3,3...")
             for comb in combinations(graph.keys(), 5):
                 subgraph = {v: set(n for n in graph[v] if n in comb) for v in comb}
                 if all(len(neighbors) == 4 for neighbors in subgraph.values()):
+                    self.log_message("O grafo contém um subgrafo homeomorfo a K5.")
                     return True
 
             for comb in combinations(graph.keys(), 6):
                 set1, set2 = comb[:3], comb[3:]
                 is_k33 = all(adjacency_matrix[v1][v2] != 0 for v1 in set1 for v2 in set2) and \
-                        all(adjacency_matrix[v1][v2] == 0 for v1 in set1 for v2 in set1) and \
-                        all(adjacency_matrix[v1][v2] == 0 for v1 in set2 for v2 in set2)
+                          all(adjacency_matrix[v1][v2] == 0 for v1 in set1 for v2 in set1) and \
+                          all(adjacency_matrix[v1][v2] == 0 for v1 in set2 for v2 in set2)
                 if is_k33:
+                    self.log_message("O grafo contém um subgrafo homeomorfo a K3,3.")
                     return True
 
+            self.log_message("Nenhum subgrafo proibido encontrado.")
             return False
 
         if contains_k5_k33(adjacency_matrix):
-            self.log_message("O grafo contém um subgrafo homeomorfo a K5 ou K3,3, então não é planar.")
+            self.log_message("O grafo não é planar devido a subgrafos proibidos.")
             messagebox.showinfo("Verificação de Planaridade", "O grafo contém um subgrafo homeomorfo a K5 ou K3,3, então não é planar.")
         else:
             self.log_message("O grafo é planar.")
