@@ -1,6 +1,5 @@
 import tkinter as tk
 import subprocess
-from ..check.cyclic import VerificationApp
 
 class MainApp:
     def __init__(self, root):
@@ -18,9 +17,40 @@ class MainApp:
         tk.Button(self.root, text="Verificar se o Grafo é Não Direcionado e Conectado", command=self.check_if_undirected_and_connected).pack(pady=5)
 
     def check_if_cyclic(self):
-        cyclic_window = tk.Toplevel(self.root)
-        VerificationApp(cyclic_window)
-
+        result = subprocess.run(["python", "cyclic.py"], capture_output=True, text=True, cwd="../check")
+        print(result.stdout)
+        print(result.stderr)
+    
+    def check_dag_and_topological_sort(self):
+        result = subprocess.run(["python", "dag_top_gen.py"], capture_output=True, text=True, cwd="../check")
+        print(result.stdout)
+        print(result.stderr)
+    
+    def check_eulerian(self):
+        result = subprocess.run(["python", "eulerian.py"], capture_output=True, text=True, cwd="../check")
+        print(result.stdout)
+        print(result.stderr)
+    
+    def find_minimum_allocation(self):
+        result = subprocess.run(["python", "min_alloc.py"], capture_output=True, text=True, cwd="../check")
+        print(result.stdout)
+        print(result.stderr)
+    
+    def check_planarity(self):
+        result = subprocess.run(["python", "planarity.py"], capture_output=True, text=True, cwd="../check")
+        print(result.stdout)
+        print(result.stderr)
+    
+    def check_strongly_connected_components(self):
+        result = subprocess.run(["python", "str_con_comp.py"], capture_output=True, text=True, cwd="../check")
+        print(result.stdout)
+        print(result.stderr)
+    
+    def check_if_undirected_and_connected(self):
+        result = subprocess.run(["python", "und_con.py"], capture_output=True, text=True, cwd="../check")
+        print(result.stdout)
+        print(result.stderr)
+        
 if __name__ == "__main__":
     root = tk.Tk()
     app = MainApp(root)

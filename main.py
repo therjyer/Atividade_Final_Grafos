@@ -14,6 +14,7 @@ class MainApp:
         tk.Button(self.root, text="Deletar Grafo", command=self.delete_graph).pack(pady=5)
         tk.Button(self.root, text="Fazer verificações", command=self.check_graph).pack(pady=5)
         tk.Button(self.root, text="Fazer perguntas", command=self.quest_graph).pack(pady=5)
+        tk.Button(self.root, text="Geradores", command=self.gen_graph).pack(pady=5)
 
     def create_graph(self):
         result = subprocess.run(["python", "create.py"], capture_output=True, text=True, cwd="./src")
@@ -44,7 +45,12 @@ class MainApp:
         result = subprocess.run(["python", "quest.py"], capture_output=True, text=True, cwd="./src")
         print(result.stdout)
         print(result.stderr)
-
+    
+    def gen_graph(self):
+        result = subprocess.run(["python", "path.py"], capture_output=True, text=True, cwd="./src")
+        print(result.stdout)
+        print(result.stderr)
+    
 if __name__ == "__main__":
     root = tk.Tk()
     app = MainApp(root)
