@@ -41,7 +41,6 @@ class VerificationApp:
         tk.Button(self.root, text="Generate a Topological Sort in a DAG", command=self.check_dag_and_topological_sort).pack()
         tk.Button(self.root, text="Check if Graph is Eulerian", command=self.check_eulerian).pack()
         tk.Button(self.root, text="Check Planarity", command=self.check_planarity).pack()
-        tk.Button(self.root, text="Find Minimum Allocation (Hungarian)", command=self.find_minimum_allocation).pack()
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -451,43 +450,6 @@ class VerificationApp:
         else:
             self.log_message("Grafo é planar.")
             messagebox.showinfo("Planarity Check", "Grafo é planar.")
-
-    def make_undirected(self, adjacency_matrix):
-        undirected_matrix = {}
-        for u in adjacency_matrix:
-            undirected_matrix[u] = {}
-            for v, weight in adjacency_matrix[u].items():
-                if weight > 0:
-                    undirected_matrix[u][v] = weight
-                    if v not in undirected_matrix:
-                        undirected_matrix[v] = {}
-                    undirected_matrix[v][u] = weight
-        return undirected_matrix
-
-    def find_minimum_allocation(self):
-        graph_info = self.get_selected_graph()
-        if not graph_info:
-            return
-
-        if not graph_info.get('has_weights', False):
-            messagebox.showerror("Error", "Minimum allocation only applies to weighted, complete bipartite graphs.")
-            return
-
-        adjacency_matrix = self.make_undirected(graph_info['adjacency_matrix'])
-
-        cost_matrix = []
-        vertices = list(adjacency_matrix.keys())
-        for u in vertices:
-            cost_row = [adjacency_matrix[u].get(v, float('inf')) for v in vertices]
-            cost_matrix.append(cost_row)
-
-        row_ind, col_ind = linear_sum_assignment(cost_matrix)
-        min_cost = sum(cost_matrix[row][col] for row, col in zip(row_ind, col_ind))
-
-        allocation = [f"{vertices[row]} -> {vertices[col]}" for row, col in zip(row_ind, col_ind)]
-        self.log_message(f"Minimum allocation with cost {min_cost}:")
-        self.log_message("\n".join(allocation))
-        messagebox.showinfo("Minimum Allocation", f"Minimum allocation with cost {min_cost}:\n" + "\n".join(allocation))
         
 if __name__ == "__main__":
     root = tk.Tk()

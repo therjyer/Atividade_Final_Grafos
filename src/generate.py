@@ -35,14 +35,11 @@ class VerificationApp:
         self.log_text = tk.Text(self.root, height=15, width=50)
         self.log_text.pack()
         
-        tk.Button(self.root, text="Check Edge Existence", command=self.check_edge).pack()
         tk.Button(self.root, text="Check Vertex Degree", command=self.check_vertex_degree).pack()
         tk.Button(self.root, text="Check Vertex Adjacency", command=self.check_vertex_adjacency).pack()
         tk.Button(self.root, text="Check Independent Vertex Set", command=self.check_independent_set).pack()
         tk.Button(self.root, text="Check Clique", command=self.check_clique).pack()
         tk.Button(self.root, text="Check Dominating Set", command=self.check_dominating_set).pack()
-        tk.Button(self.root, text="Find Shortest Path", command=self.find_shortest_path).pack()
-        tk.Button(self.root, text="Find Lowest Cost Path", command=self.find_lowest_cost_path).pack()
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -54,22 +51,6 @@ class VerificationApp:
             messagebox.showerror("Error", "Please select a valid graph name.")
             return None
         return self.graph_data[graph_name]
-    
-    def check_edge(self):
-        graph_info = self.get_selected_graph()
-        if not graph_info:
-            return
-        vertex1 = simpledialog.askstring("Vertex", "Enter the starting vertex of the edge:")
-        vertex2 = simpledialog.askstring("Vertex", "Enter the ending vertex of the edge:")
-        if vertex1 and vertex2:
-            self.check_edge_existence(graph_info, vertex1, vertex2)
-    
-    def check_edge_existence(self, graph_info, vertex1, vertex2):
-        adjacency_matrix = graph_info['adjacency_matrix']
-        if vertex1 in adjacency_matrix and vertex2 in adjacency_matrix[vertex1] and adjacency_matrix[vertex1][vertex2] != 0:
-            messagebox.showinfo("Edge Existence", f"The edge ({vertex1} - {vertex2}) exists with weight {adjacency_matrix[vertex1][vertex2]}.")
-        else:
-            messagebox.showinfo("Edge Existence", f"The edge ({vertex1} - {vertex2}) does not exist.")
 
     def check_vertex_degree(self):
         graph_info = self.get_selected_graph()
@@ -207,149 +188,6 @@ class VerificationApp:
             missing_vertices = all_vertices - covered_vertices
             self.log_message(f"The specified set is not a dominating set. Missing vertices: {', '.join(missing_vertices)}.")
             messagebox.showerror("Not a Dominating Set", f"The specified set is not a dominating set. Missing vertices: {', '.join(missing_vertices)}.")
-
-    def find_shortest_path(self):
-        graph_info = self.get_selected_graph()
-        if not graph_info:
-            return
-
-        adjacency_matrix = graph_info['adjacency_matrix']
-
-        start_vertex = simpledialog.askstring("Input", "Enter the starting vertex:")
-        end_vertex = simpledialog.askstring("Input", "Enter the ending vertex:")
-
-        if start_vertex not in adjacency_matrix or end_vertex not in adjacency_matrix:
-            messagebox.showerror("Error", "One or both vertices do not exist in the graph.")
-            return
-
-        path = self.bfs_shortest_path(adjacency_matrix, start_vertex, end_vertex)
-        if path:
-            self.log_message(f"Shortest path from {start_vertex} to {end_vertex}: " + " -> ".join(path))
-            messagebox.showinfo("Shortest Path", f"Shortest path from {start_vertex} to {end_vertex}: " + " -> ".join(path))
-        else:
-            self.log_message(f"No path exists between {start_vertex} and {end_vertex}.")
-            messagebox.showerror("No Path", f"No path exists between {start_vertex} and {end_vertex}.")
-
-    def bfs_shortest_path(self, adjacency_matrix, start, goal):
-        queue = deque([[start]])
-        visited = set()
-
-        while queue:
-            path = queue.popleft()
-            vertex = path[-1]
-
-            if vertex == goal:
-                return path
-
-            elif vertex not in visited:
-                for neighbor in adjacency_matrix[vertex]:
-                    if adjacency_matrix[vertex][neighbor] != 0:
-                        new_path = list(path)
-                        new_path.append(neighbor)
-                        queue.append(new_path)
-
-                visited.add(vertex)
-
-        return None
-
-    def find_lowest_cost_path(self):
-        graph_info = self.get_selected_graph()
-        if not graph_info:
-            return
-
-        if not graph_info.get('has_weights', False):
-            messagebox.showerror("Error", "This function only works for weighted graphs.")
-            return
-
-        adjacency_matrix = graph_info['adjacency_matrix']
-        start_vertex = simpledialog.askstring("Input", "Enter the starting vertex:")
-        end_vertex = simpledialog.askstring("Input", "Enter the ending vertex:")
-
-        if start_vertex not in adjacency_matrix or end_vertex not in adjacency_matrix:
-            messagebox.showerror("Error", "One or both vertices do not exist in the graph.")
-            return
-
-        if self.has_negative_cycle(adjacency_matrix, start_vertex):
-            self.log_message("Graph has a negative cycle. Using Bellman-Ford for shortest path.")
-            path, cost = self.bellman_ford_shortest_path(adjacency_matrix, start_vertex, end_vertex)
-        else:
-            path, cost = self.dijkstra_shortest_path(adjacency_matrix, start_vertex, end_vertex)
-
-        if path:
-            self.log_message(f"Lowest cost path from {start_vertex} to {end_vertex}: " + " -> ".join(path) + f" with cost {cost}")
-            messagebox.showinfo("Lowest Cost Path", f"Lowest cost path from {start_vertex} to {end_vertex}: " + " -> ".join(path) + f" with cost {cost}")
-        else:
-            self.log_message(f"No path exists between {start_vertex} and {end_vertex}.")
-            messagebox.showerror("No Path", f"No path exists between {start_vertex} and {end_vertex}.")
-
-    def has_negative_cycle(self, adjacency_matrix, start):
-        min_costs = {vertex: float('inf') for vertex in adjacency_matrix}
-        min_costs[start] = 0
-
-        vertices = list(adjacency_matrix.keys())
-        for _ in range(len(vertices) - 1):
-            for u in adjacency_matrix:
-                for v, weight in adjacency_matrix[u].items():
-                    if weight != 0 and min_costs[u] != float('inf') and min_costs[u] + weight < min_costs[v]:
-                        min_costs[v] = min_costs[u] + weight
-
-        # Check for negative weight cycles
-        for u in adjacency_matrix:
-            for v, weight in adjacency_matrix[u].items():
-                if weight != 0 and min_costs[u] != float('inf') and min_costs[u] + weight < min_costs[v]:
-                    return True  # Negative cycle detected
-
-        return False
-
-    def bellman_ford_shortest_path(self, adjacency_matrix, start, goal):
-        min_costs = {vertex: float('inf') for vertex in adjacency_matrix}
-        predecessors = {vertex: None for vertex in adjacency_matrix}
-        min_costs[start] = 0
-
-        vertices = list(adjacency_matrix.keys())
-        for _ in range(len(vertices) - 1):
-            for u in adjacency_matrix:
-                for v, weight in adjacency_matrix[u].items():
-                    if weight != 0 and min_costs[u] != float('inf') and min_costs[u] + weight < min_costs[v]:
-                        min_costs[v] = min_costs[u] + weight
-                        predecessors[v] = u
-
-        if min_costs[goal] == float('inf'):
-            return None, float('inf')
-
-        path = []
-        current = goal
-        while current is not None:
-            path.insert(0, current)
-            current = predecessors[current]
-
-        return path, min_costs[goal]
-
-    def dijkstra_shortest_path(self, adjacency_matrix, start, goal):
-        min_costs = {vertex: float('inf') for vertex in adjacency_matrix}
-        min_costs[start] = 0
-        priority_queue = [(0, start, [start])]
-        visited = set()
-
-        while priority_queue:
-            current_cost, current_vertex, path = heapq.heappop(priority_queue)
-
-            if current_vertex in visited:
-                continue
-
-            visited.add(current_vertex)
-
-            if current_vertex == goal:
-                return path, current_cost
-
-            for neighbor, weight in adjacency_matrix[current_vertex].items():
-                if weight > 0 and neighbor not in visited:
-                    new_cost = current_cost + weight
-                    if new_cost < min_costs[neighbor]:
-                        min_costs[neighbor] = new_cost
-                        heapq.heappush(priority_queue, (new_cost, neighbor, path + [neighbor]))
-
-        return None, float('inf')
 
 if __name__ == "__main__":
     root = tk.Tk()

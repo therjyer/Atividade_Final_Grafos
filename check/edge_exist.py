@@ -1,13 +1,17 @@
 import tkinter as tk
+import networkx as nx
+import matplotlib.pyplot as plt
+from scipy.optimize import linear_sum_assignment
 from tkinter import messagebox, simpledialog
 from collections import deque
+import heapq
 import json
 import os
 
 class VerificationApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Verificações de grafos")
+        self.root.title("Verificações de Grafos")
         self.graph_data = {}
         self.graph_names = []
         self.load_graphs()
@@ -31,7 +35,7 @@ class VerificationApp:
         self.log_text = tk.Text(self.root, height=15, width=50)
         self.log_text.pack()
         
-        tk.Button(self.root, text="Encontrar Caminho Mais Curto", command=self.find_shortest_path).pack()
+        tk.Button(self.root, text="Verificar Existência de Aresta", command=self.check_edge).pack()
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -43,50 +47,22 @@ class VerificationApp:
             messagebox.showerror("Erro", "Por favor, selecione um nome de grafo válido.")
             return None
         return self.graph_data[graph_name]
-
-    def find_shortest_path(self):
+    
+    def check_edge(self):
         graph_info = self.get_selected_graph()
         if not graph_info:
             return
-
+        vertex1 = simpledialog.askstring("Vértice", "Digite o vértice inicial da aresta:")
+        vertex2 = simpledialog.askstring("Vértice", "Digite o vértice final da aresta:")
+        if vertex1 and vertex2:
+            self.check_edge_existence(graph_info, vertex1, vertex2)
+    
+    def check_edge_existence(self, graph_info, vertex1, vertex2):
         adjacency_matrix = graph_info['adjacency_matrix']
-
-        start_vertex = simpledialog.askstring("Entrada", "Digite o vértice de início:")
-        end_vertex = simpledialog.askstring("Entrada", "Digite o vértice de término:")
-
-        if start_vertex not in adjacency_matrix or end_vertex not in adjacency_matrix:
-            messagebox.showerror("Erro", "Um ou ambos os vértices não existem no grafo.")
-            return
-
-        path = self.bfs_shortest_path(adjacency_matrix, start_vertex, end_vertex)
-        if path:
-            self.log_message(f"Caminho mais curto de {start_vertex} para {end_vertex}: " + " -> ".join(path))
-            messagebox.showinfo("Caminho Mais Curto", f"Caminho mais curto de {start_vertex} para {end_vertex}: " + " -> ".join(path))
+        if vertex1 in adjacency_matrix and vertex2 in adjacency_matrix[vertex1] and adjacency_matrix[vertex1][vertex2] != 0:
+            messagebox.showinfo("Existência da Aresta", f"A aresta ({vertex1} - {vertex2}) existe com peso {adjacency_matrix[vertex1][vertex2]}.")
         else:
-            self.log_message(f"Não existe caminho entre {start_vertex} e {end_vertex}.")
-            messagebox.showerror("Sem Caminho", f"Não existe caminho entre {start_vertex} e {end_vertex}.")
-
-    def bfs_shortest_path(self, adjacency_matrix, start, goal):
-        queue = deque([[start]])
-        visited = set()
-
-        while queue:
-            path = queue.popleft()
-            vertex = path[-1]
-
-            if vertex == goal:
-                return path
-
-            elif vertex not in visited:
-                for neighbor in adjacency_matrix[vertex]:
-                    if adjacency_matrix[vertex][neighbor] != 0:
-                        new_path = list(path)
-                        new_path.append(neighbor)
-                        queue.append(new_path)
-
-                visited.add(vertex)
-
-        return None
+            messagebox.showinfo("Existência da Aresta", f"A aresta ({vertex1} - {vertex2}) não existe.")
 
 if __name__ == "__main__":
     root = tk.Tk()

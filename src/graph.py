@@ -65,8 +65,12 @@ class GraphApp:
         self.save_to_json()
 
     def save_to_json(self):
-        if os.path.exists("../lib/adjacency_matrix.json"):
-            with open("../lib/adjacency_matrix.json", "r") as f:
+        file_path = "../lib/adjacency_matrix.json"
+        
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+        if os.path.exists(file_path):
+            with open(file_path, "r") as f:
                 graphs = json.load(f)
         else:
             graphs = {}
@@ -77,10 +81,11 @@ class GraphApp:
             "adjacency_matrix": self.adjacency_matrix
         }
 
-        with open("../lib/adjacency_matrix.json", "w") as f:
+        with open(file_path, "w") as f:
             json.dump(graphs, f, indent=4)
         
         messagebox.showinfo("Salvo", f"Grafo '{self.graph_name}' salvo em adjacency_matrix.json")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
