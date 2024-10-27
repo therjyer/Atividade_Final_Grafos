@@ -4,7 +4,7 @@ import subprocess
 class MainApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Gerenciador de Grafos")
+        self.root.title("Verificador de Grafos")
 
         tk.Label(self.root, text="Escolha uma ação:").pack(pady=10)
 

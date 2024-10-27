@@ -1,6 +1,77 @@
 {
-    "Grafo_Unique_01": { 
+    "Grafo_Orientado_NaoBipartido_NaoCiclico_NaoPonderado": {
         "type": "directed",
+        "is_bipartite": false,
+        "is_cyclic": false,
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 1
+            },
+            "C": {
+                "A": 0,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_Orientado_NaoBipartido_NaoCiclico_Ponderado": {
+        "type": "directed",
+        "is_bipartite": false,
+        "is_cyclic": false,
+        "has_weights": true,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 2,
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 3
+            },
+            "C": {
+                "A": 0,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_Orientado_NaoBipartido_Ciclico_NaoPonderado": {
+        "type": "directed",
+        "is_bipartite": false,
+        "is_cyclic": true,
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 1
+            },
+            "C": {
+                "A": 1,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_Orientado_NaoBipartido_Ciclico_Ponderado": {
+        "type": "directed",
+        "is_bipartite": false,
+        "is_cyclic": true,
         "has_weights": true,
         "adjacency_matrix": {
             "A": {
@@ -14,30 +85,335 @@
                 "C": 4
             },
             "C": {
+                "A": 3,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_Orientado_Bipartido_NaoCiclico_NaoPonderado": {
+        "type": "directed",
+        "is_bipartite": true,
+        "is_cyclic": false,
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 1
+            },
+            "C": {
                 "A": 0,
                 "B": 0,
                 "C": 0
             }
         }
     },
-    "Grafo_Bipartido_01": { 
-        "type": "bipartite",
+    "Grafo_Orientado_Bipartido_NaoCiclico_Ponderado": {
+        "type": "directed",
+        "is_bipartite": true,
+        "is_cyclic": false,
         "has_weights": true,
         "adjacency_matrix": {
             "A": {
                 "A": 0,
+                "B": 2,
+                "C": 0
+            },
+            "B": {
+                "A": 3,
+                "B": 0,
+                "C": 0
+            },
+            "C": {
+                "A": 0,
+                "B": 4,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_Orientado_Bipartido_Ciclico_NaoPonderado": {
+        "type": "directed",
+        "is_bipartite": true,
+        "is_cyclic": true,
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
                 "B": 1,
-                "C": 3
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 1
+            },
+            "C": {
+                "A": 1,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_Orientado_Bipartido_Ciclico_Ponderado": {
+        "type": "directed",
+        "is_bipartite": true,
+        "is_cyclic": true,
+        "has_weights": true,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 2,
+                "C": 0
+            },
+            "B": {
+                "A": 4,
+                "B": 0,
+                "C": 1
+            },
+            "C": {
+                "A": 0,
+                "B": 3,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_NaoOrientado_NaoBipartido_NaoCiclico_NaoPonderado": {
+        "type": "undirected",
+        "is_bipartite": false,
+        "is_cyclic": false,
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 0
+            },
+            "B": {
+                "A": 1,
+                "B": 0,
+                "C": 0
+            },
+            "C": {
+                "A": 0,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_NaoOrientado_NaoBipartido_NaoCiclico_Ponderado": {
+        "type": "undirected",
+        "is_bipartite": false,
+        "is_cyclic": false,
+        "has_weights": true,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 2,
+                "C": 0
             },
             "B": {
                 "A": 2,
                 "B": 0,
-                "C": 4
+                "C": 0
+            },
+            "C": {
+                "A": 0,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_NaoOrientado_NaoBipartido_Ciclico_NaoPonderado": {
+        "type": "undirected",
+        "is_bipartite": false,
+        "is_cyclic": true,
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 1
+            },
+            "C": {
+                "A": 1,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_NaoOrientado_NaoBipartido_Ciclico_Ponderado": {
+        "type": "undirected",
+        "is_bipartite": false,
+        "is_cyclic": true,
+        "has_weights": true,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 2,
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 3
+            },
+            "C": {
+                "A": 2,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_NaoOrientado_Bipartido_NaoCiclico_NaoPonderado": {
+        "type": "undirected",
+        "is_bipartite": true,
+        "is_cyclic": false,
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 1
+            },
+            "C": {
+                "A": 0,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_NaoOrientado_Bipartido_NaoCiclico_Ponderado": {
+        "type": "undirected",
+        "is_bipartite": true,
+        "is_cyclic": false,
+        "has_weights": true,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 3,
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 2
             },
             "C": {
                 "A": 5,
-                "B": 6,
+                "B": 0,
                 "C": 0
+            }
+        }
+    },
+    "Grafo_NaoOrientado_Bipartido_Ciclico_NaoPonderado": {
+        "type": "undirected",
+        "is_bipartite": true,
+        "is_cyclic": true,
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "C": 1
+            },
+            "C": {
+                "A": 1,
+                "B": 0,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_NaoOrientado_Bipartido_Ciclico_Ponderado": {
+        "type": "undirected",
+        "is_bipartite": true,
+        "is_cyclic": true,
+        "has_weights": true,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 2,
+                "C": 0
+            },
+            "B": {
+                "A": 3,
+                "B": 0,
+                "C": 1
+            },
+            "C": {
+                "A": 0,
+                "B": 4,
+                "C": 0
+            }
+        }
+    },
+    "Grafo_NaoOrientado_ComPesos": {
+        "type": "undirected",
+        "has_weights": true,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 2,
+                "C": 3,
+                "D": 0,
+                "E": 4
+            },
+            "B": {
+                "A": 2,
+                "B": 0,
+                "C": 0,
+                "D": 5,
+                "E": 0
+            },
+            "C": {
+                "A": 3,
+                "B": 0,
+                "C": 0,
+                "D": 6,
+                "E": 0
+            },
+            "D": {
+                "A": 0,
+                "B": 5,
+                "C": 6,
+                "D": 0,
+                "E": 1
+            },
+            "E": {
+                "A": 4,
+                "B": 0,
+                "C": 0,
+                "D": 1,
+                "E": 0
+            }
+        }
+    },
+    "a": {
+        "type": "undirected",
+        "has_weights": true,
+        "adjacency_matrix": {
+            "a": {
+                "a": 2
             }
         }
     }
