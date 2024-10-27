@@ -45,6 +45,7 @@ class VerificationApp:
         return self.graph_data[graph_name]
 
     def make_undirected(self, adjacency_matrix):
+        self.log_message("Convertendo a matriz de adjacência para não direcionada...")
         undirected_matrix = {}
         for u in adjacency_matrix:
             undirected_matrix[u] = {}
@@ -54,9 +55,13 @@ class VerificationApp:
                     if v not in undirected_matrix:
                         undirected_matrix[v] = {}
                     undirected_matrix[v][u] = weight
+        self.log_message("Conversão concluída.")
         return undirected_matrix
 
     def find_minimum_allocation(self):
+        self.log_text.delete(1.0, tk.END)
+        self.log_message("Iniciando a busca pela alocação mínima...")
+
         graph_info = self.get_selected_graph()
         if not graph_info:
             return
@@ -69,9 +74,12 @@ class VerificationApp:
 
         cost_matrix = []
         vertices = list(adjacency_matrix.keys())
+        self.log_message("Construindo a matriz de custo...")
+
         for u in vertices:
             cost_row = [adjacency_matrix[u].get(v, float('inf')) for v in vertices]
             cost_matrix.append(cost_row)
+            self.log_message(f"Matriz de custo para {u}: {cost_row}")
 
         row_ind, col_ind = linear_sum_assignment(cost_matrix)
         min_cost = sum(cost_matrix[row][col] for row, col in zip(row_ind, col_ind))
