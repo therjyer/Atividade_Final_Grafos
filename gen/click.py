@@ -61,13 +61,20 @@ class VerificationApp:
         vertices = vertices_input.split(',')
         vertices = [v.strip() for v in vertices]
 
+        self.log_message(f"Vértices fornecidos: {vertices}")
+
         for i, v1 in enumerate(vertices):
+            if v1 not in adjacency_matrix:
+                self.log_message(f"Vértice {v1} não existe no grafo.")
+                messagebox.showerror("Não é um Clique", f"Vértice {v1} não existe no grafo.")
+                return
             for v2 in vertices[i+1:]:
-                if v1 in adjacency_matrix and v2 in adjacency_matrix[v1] and adjacency_matrix[v1][v2] == 0:
-                    self.log_message(f"Vértices {v1} e {v2} não são adjacentes. O conjunto não é um clique.")
-                    messagebox.showerror("Não é um Clique", f"Vértices {v1} e {v2} não são adjacentes. O conjunto não é um clique.")
+                if v2 not in adjacency_matrix:
+                    self.log_message(f"Vértice {v2} não existe no grafo.")
+                    messagebox.showerror("Não é um Clique", f"Vértice {v2} não existe no grafo.")
                     return
-                elif v1 not in adjacency_matrix or v2 not in adjacency_matrix[v1]:
+                
+                if adjacency_matrix[v1].get(v2, 1) == 0:  # Verifica se a aresta não existe
                     self.log_message(f"Vértices {v1} e {v2} não são adjacentes. O conjunto não é um clique.")
                     messagebox.showerror("Não é um Clique", f"Vértices {v1} e {v2} não são adjacentes. O conjunto não é um clique.")
                     return
