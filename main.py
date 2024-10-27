@@ -4,16 +4,16 @@ import subprocess
 class MainApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Graph Manager")
+        self.root.title("Gerenciador de Grafos")
 
-        tk.Label(self.root, text="Choose an action:").pack(pady=10)
+        tk.Label(self.root, text="Escolha uma ação:").pack(pady=10)
 
-        tk.Button(self.root, text="Create New Graph", command=self.create_graph).pack(pady=5)
-        tk.Button(self.root, text="Edit Existing Graph", command=self.edit_graph).pack(pady=5)
-        tk.Button(self.root, text="Visualize Graph", command=self.visualize_graph).pack(pady=5)
-        tk.Button(self.root, text="Delete Graph", command=self.delete_graph).pack(pady=5)
-        tk.Button(self.root, text="Make verifications", command=self.check_graph).pack(pady=5)
-        tk.Button(self.root, text="Do questions", command=self.generate_graph).pack(pady=5)
+        tk.Button(self.root, text="Criar Novo Grafo", command=self.create_graph).pack(pady=5)
+        tk.Button(self.root, text="Editar Grafo Existente", command=self.edit_graph).pack(pady=5)
+        tk.Button(self.root, text="Visualizar Grafo", command=self.visualize_graph).pack(pady=5)
+        tk.Button(self.root, text="Deletar Grafo", command=self.delete_graph).pack(pady=5)
+        tk.Button(self.root, text="Fazer verificações", command=self.check_graph).pack(pady=5)
+        tk.Button(self.root, text="Fazer perguntas", command=self.generate_graph).pack(pady=5)
 
     def create_graph(self):
         subprocess.run(["python", "./src/graph.py"])

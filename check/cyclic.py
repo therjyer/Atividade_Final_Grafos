@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox
 import json
 import os
 
@@ -30,7 +30,7 @@ class VerificationApp:
         self.log_text = tk.Text(self.root, height=15, width=50)
         self.log_text.pack()
         
-        tk.Button(self.root, text="Verificar Existência de Aresta", command=self.check_edge).pack()
+        tk.Button(self.root, text="Verificar se o Grafo é Cíclico", command=self.check_if_cyclic).pack()
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -42,23 +42,52 @@ class VerificationApp:
             messagebox.showerror("Erro", "Por favor, selecione um nome de grafo válido.")
             return None
         return self.graph_data[graph_name]
-    
-    def check_edge(self):
+
+    def check_if_cyclic(self):
         graph_info = self.get_selected_graph()
         if not graph_info:
             return
-        vertex1 = simpledialog.askstring("Vértice", "Digite o vértice inicial da aresta:")
-        vertex2 = simpledialog.askstring("Vértice", "Digite o vértice final da aresta:")
-        if vertex1 and vertex2:
-            self.check_edge_existence(graph_info, vertex1, vertex2)
-    
-    def check_edge_existence(self, graph_info, vertex1, vertex2):
-        adjacency_matrix = graph_info['adjacency_matrix']
-        if vertex1 in adjacency_matrix and vertex2 in adjacency_matrix[vertex1] and adjacency_matrix[vertex1][vertex2] != 0:
-            messagebox.showinfo("Existência da Aresta", f"A aresta ({vertex1} - {vertex2}) existe com peso {adjacency_matrix[vertex1][vertex2]}.")
-        else:
-            messagebox.showinfo("Existência da Aresta", f"A aresta ({vertex1} - {vertex2}) não existe.")
 
+        adjacency_matrix = graph_info['adjacency_matrix']
+        vertices = list(adjacency_matrix.keys())
+        visited = set()
+        visiting = set()
+        cycle_vertices = set()
+
+        def has_cycle(v):
+            if v in visiting:
+                return True
+            if v in visited:
+                return False
+
+            visiting.add(v)
+            for neighbor in adjacency_matrix[v]:
+                if adjacency_matrix[v][neighbor] != 0:
+                    if has_cycle(neighbor):
+                        cycle_vertices.add(v)
+                        return True
+            
+            visiting.remove(v)
+            visited.add(v)
+            return False
+
+        cycle_count = 0
+
+        for vertex in vertices:
+            if vertex not in visited:
+                if has_cycle(vertex):
+                    cycle_count += 1
+
+        total_vertices = len(vertices)
+
+        if cycle_count > 0:
+            messagebox.showinfo("Verificação Cíclica do Grafo", 
+                f"O grafo contém {cycle_count} ciclo(s).\n"
+                f"Vértices envolvidos em ciclo(s): {', '.join(cycle_vertices)}.")
+        else:
+            messagebox.showinfo("Verificação Cíclica do Grafo", 
+                f"O grafo não contém um ciclo.\nTotal de vértices: {total_vertices}.")
+            
 if __name__ == "__main__":
     root = tk.Tk()
     app = VerificationApp(root)

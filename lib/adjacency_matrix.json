@@ -10,10 +10,10 @@
     },
     "b": {
         "type": "undirected",
-        "has_weights": false,
+        "has_weights": true,
         "adjacency_matrix": {
             "b": {
-                "b": 1
+                "b": 3
             }
         }
     }

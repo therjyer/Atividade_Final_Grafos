@@ -1,12 +1,12 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox
 import json
 import os
 
 class EraseGraphApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Erase Graph")
+        self.root.title("Apagar Grafo")
 
         self.graph_data = {}
         self.load_graphs()
@@ -14,7 +14,7 @@ class EraseGraphApp:
 
     def load_graphs(self):
         if not os.path.exists("../lib/adjacency_matrix.json"):
-            messagebox.showerror("Error", "No adjacency_matrix.json file found.")
+            messagebox.showerror("Erro", "Arquivo adjacency_matrix.json não encontrado.")
             self.root.destroy()
             return
 
@@ -24,30 +24,30 @@ class EraseGraphApp:
         self.graph_names = list(self.graph_data.keys())
 
     def create_widgets(self):
-        tk.Label(self.root, text="Select a graph to delete:").pack()
+        tk.Label(self.root, text="Selecione um grafo para apagar:").pack()
         
-        self.selected_graph = tk.StringVar(value="Choose a graph")
+        self.selected_graph = tk.StringVar(value="Escolha um grafo")
         self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, *self.graph_names)
         self.graph_menu.pack()
 
-        tk.Button(self.root, text="Delete Graph", command=self.delete_graph).pack()
+        tk.Button(self.root, text="Apagar Grafo", command=self.delete_graph).pack()
 
     def delete_graph(self):
         graph_name = self.selected_graph.get()
-        if graph_name == "Choose a graph" or graph_name not in self.graph_data:
-            messagebox.showerror("Error", "Please select a valid graph to delete.")
+        if graph_name == "Escolha um grafo" or graph_name not in self.graph_data:
+            messagebox.showerror("Erro", "Por favor, selecione um grafo válido para apagar.")
             return
 
-        confirm = messagebox.askyesno("Confirm Deletion", f"Are you sure you want to delete the graph '{graph_name}'?")
+        confirm = messagebox.askyesno("Confirmar Exclusão", f"Você tem certeza que deseja apagar o grafo '{graph_name}'?")
         if confirm:
             del self.graph_data[graph_name]
             self.save_changes()
-            messagebox.showinfo("Deleted", f"Graph '{graph_name}' has been deleted.")
+            messagebox.showinfo("Apagado", f"Grafo '{graph_name}' foi apagado.")
 
     def save_changes(self):
         with open("../lib/adjacency_matrix.json", "w") as f:
             json.dump(self.graph_data, f, indent=4)
-        messagebox.showinfo("Saved", "Changes saved to adjacency_matrix.json")
+        messagebox.showinfo("Salvo", "Alterações salvas em adjacency_matrix.json")
 
 if __name__ == "__main__":
     root = tk.Tk()
