@@ -8,16 +8,9 @@
 
 <h1 style="text-align:center;">Trabalho Final</h1>
 
-<p style="text-align:center;">O grupo de até 4 (quatro) integrantes deverá implementar um programa computacional, em linguagem de programação a sua escolha, que trabalhe os itens abaixo ao receber um grafo orientado (dı́grafo) ou não-orientado de entrada.</p>
+O grupo de até 4 (quatro) integrantes deverá implementar um programa computacional, em linguagem de programação a sua escolha, que trabalhe os itens abaixo ao receber um grafo orientado (dı́grafo) ou não-orientado de entrada.
 
-<p style="text-align:center;">Integrantes: </p>
-
-   <ol type="1">
-     <li>Thiago Correa de Castro</li>
-     <li>Arnold Thiago Luz Campos</li>
-   </ol>
-
-<p style="text-align:center;">Observação: Ao receber o grafo de entrada, o programa deverá ser capaz de responder itens em sequência aleatória sem que o grafo lhe seja novamente informado.</p>
+Observação: Ao receber o grafo de entrada, o programa deverá ser capaz de responder itens em sequência aleatória sem que o grafo lhe seja novamente informado.
 
 1. ~~Verificar a existência de uma dada aresta.~~
 2. ~~Informar o grau de um dado vértice.~~
