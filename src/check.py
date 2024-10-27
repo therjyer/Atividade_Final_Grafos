@@ -18,11 +18,11 @@ class VerificationApp:
         self.create_widgets()
 
     def load_graphs(self):
-        if not os.path.exists("adjacency_matrix.json"):
-            messagebox.showerror("Error", "No adjacency_matrix.json file found.")
+        if not os.path.exists("../lib/adjacency_matrix.json"):
+            messagebox.showerror("Error", "File not found.")
             self.root.destroy()
             return
-        with open("adjacency_matrix.json", "r") as f:
+        with open("../lib/adjacency_matrix.json", "r") as f:
             self.graph_data = json.load(f)
         self.graph_names = list(self.graph_data.keys())
 

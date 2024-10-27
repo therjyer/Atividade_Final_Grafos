@@ -32,12 +32,12 @@ def draw_graph_from_json(file_path, graph_name):
 
 def on_select(event):
     selected_graph = graph_var.get()
-    draw_graph_from_json('adjacency_matrix.json', selected_graph)
+    draw_graph_from_json('../lib/adjacency_matrix.json', selected_graph)
 
 root = tk.Tk()
 root.title("Seleção de Grafo")
 
-with open('adjacency_matrix.json', 'r') as file:
+with open('../lib/adjacency_matrix.json', 'r') as file:
     data = json.load(file)
 
 graph_names = list(data.keys())

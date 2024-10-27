@@ -13,12 +13,12 @@ class EraseGraphApp:
         self.create_widgets()
 
     def load_graphs(self):
-        if not os.path.exists("adjacency_matrix.json"):
+        if not os.path.exists("../lib/adjacency_matrix.json"):
             messagebox.showerror("Error", "No adjacency_matrix.json file found.")
             self.root.destroy()
             return
 
-        with open("adjacency_matrix.json", "r") as f:
+        with open("../lib/adjacency_matrix.json", "r") as f:
             self.graph_data = json.load(f)
         
         self.graph_names = list(self.graph_data.keys())
@@ -45,7 +45,7 @@ class EraseGraphApp:
             messagebox.showinfo("Deleted", f"Graph '{graph_name}' has been deleted.")
 
     def save_changes(self):
-        with open("adjacency_matrix.json", "w") as f:
+        with open("../lib/adjacency_matrix.json", "w") as f:
             json.dump(self.graph_data, f, indent=4)
         messagebox.showinfo("Saved", "Changes saved to adjacency_matrix.json")
 
