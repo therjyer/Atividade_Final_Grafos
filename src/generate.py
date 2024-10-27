@@ -36,6 +36,7 @@ class VerificationApp:
         tk.Button(self.root, text="Check Independent Vertex Set", command=self.check_independent_set).pack()
         tk.Button(self.root, text="Check Clique", command=self.check_clique).pack()
         tk.Button(self.root, text="Check Dominating Set", command=self.check_dominating_set).pack()
+        tk.Button(self.root, text="Find Shortest Path", command=self.find_shortest_path).pack()
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -200,6 +201,53 @@ class VerificationApp:
             missing_vertices = all_vertices - covered_vertices
             self.log_message(f"The specified set is not a dominating set. Missing vertices: {', '.join(missing_vertices)}.")
             messagebox.showerror("Not a Dominating Set", f"The specified set is not a dominating set. Missing vertices: {', '.join(missing_vertices)}.")
+
+    def find_shortest_path(self):
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+
+        start_vertex = simpledialog.askstring("Input", "Enter the starting vertex:")
+        end_vertex = simpledialog.askstring("Input", "Enter the ending vertex:")
+
+        if start_vertex not in adjacency_matrix or end_vertex not in adjacency_matrix:
+            messagebox.showerror("Error", "One or both vertices do not exist in the graph.")
+            return
+
+        path = self.bfs_shortest_path(adjacency_matrix, start_vertex, end_vertex)
+        if path:
+            self.log_message(f"Shortest path from {start_vertex} to {end_vertex}: " + " -> ".join(path))
+            messagebox.showinfo("Shortest Path", f"Shortest path from {start_vertex} to {end_vertex}: " + " -> ".join(path))
+        else:
+            self.log_message(f"No path exists between {start_vertex} and {end_vertex}.")
+            messagebox.showerror("No Path", f"No path exists between {start_vertex} and {end_vertex}.")
+
+    def bfs_shortest_path(self, adjacency_matrix, start, goal):
+        from collections import deque
+
+        queue = deque([[start]])
+        visited = set()
+
+        while queue:
+            path = queue.popleft()
+            vertex = path[-1]
+
+            if vertex == goal:
+                return path
+
+            elif vertex not in visited:
+                for neighbor in adjacency_matrix[vertex]:
+                    if adjacency_matrix[vertex][neighbor] != 0:
+                        new_path = list(path)
+                        new_path.append(neighbor)
+                        queue.append(new_path)
+
+                visited.add(vertex)
+
+        return None
+
 
 if __name__ == "__main__":
     root = tk.Tk()

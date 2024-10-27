@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, simpledialog
+from itertools import combinations
 import json
 import os
 
@@ -35,6 +36,7 @@ class VerificationApp:
         tk.Button(self.root, text="Check Strongly Connected Components", command=self.check_strongly_connected_components).pack()
         tk.Button(self.root, text="Generate a Topological Sort in a DAG", command=self.check_dag_and_topological_sort).pack()
         tk.Button(self.root, text="Check if Graph is Eulerian", command=self.check_eulerian).pack()
+        tk.Button(self.root, text="Check Planarity", command=self.check_planarity).pack()
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -407,6 +409,43 @@ class VerificationApp:
                 self.log_message("The undirected graph is not Eulerian.")
                 messagebox.showerror("Not Eulerian", "The undirected graph is not Eulerian.")
 
+    def check_planarity(self):
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+        vertices = list(adjacency_matrix.keys())
+        v = len(vertices)
+        e = sum(len([n for n in adjacency_matrix[vertex] if adjacency_matrix[vertex][n] != 0]) for vertex in vertices) // 2
+
+        if e > 3 * v - 6:
+            self.log_message("Grafo não é planar pela fórmula de Euler.")
+            messagebox.showinfo("Planarity Check", "Grafo não é planar pela fórmula de Euler.")
+            return
+
+        def contains_k5_k33(graph):
+            for comb in combinations(graph.keys(), 5):
+                subgraph = {v: set(n for n in graph[v] if n in comb) for v in comb}
+                if all(len(neighbors) == 4 for neighbors in subgraph.values()):
+                    return True
+
+            for comb in combinations(graph.keys(), 6):
+                set1, set2 = comb[:3], comb[3:]
+                is_k33 = all(adjacency_matrix[v1][v2] != 0 for v1 in set1 for v2 in set2) and \
+                        all(adjacency_matrix[v1][v2] == 0 for v1 in set1 for v2 in set1) and \
+                        all(adjacency_matrix[v1][v2] == 0 for v1 in set2 for v2 in set2)
+                if is_k33:
+                    return True
+
+            return False
+
+        if contains_k5_k33(adjacency_matrix):
+            self.log_message("Grafo contém subgrafo homeomorfo a K5 ou K3,3, então não é planar.")
+            messagebox.showinfo("Planarity Check", "Grafo contém subgrafo homeomorfo a K5 ou K3,3, então não é planar.")
+        else:
+            self.log_message("Grafo é planar.")
+            messagebox.showinfo("Planarity Check", "Grafo é planar.")
 
 if __name__ == "__main__":
     root = tk.Tk()
