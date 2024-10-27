@@ -55,26 +55,34 @@ class VerificationApp:
         cycle_vertices = set()
 
         def has_cycle(v):
+            self.log_message(f"Verificando o vértice: {v}")
             if v in visiting:
+                self.log_message(f"Vértice {v} está em 'visiting', ciclo encontrado!")
                 return True
             if v in visited:
+                self.log_message(f"Vértice {v} já foi visitado, pulando.")
                 return False
 
             visiting.add(v)
+            self.log_message(f"Adicionando {v} a 'visiting'.")
             for neighbor in adjacency_matrix[v]:
                 if adjacency_matrix[v][neighbor] != 0:
+                    self.log_message(f"Vértice {v} tem vizinho: {neighbor}.")
                     if has_cycle(neighbor):
                         cycle_vertices.add(v)
+                        self.log_message(f"Vértice {v} está envolvido em um ciclo.")
                         return True
             
             visiting.remove(v)
             visited.add(v)
+            self.log_message(f"Marcando {v} como visitado.")
             return False
 
         cycle_count = 0
 
         for vertex in vertices:
             if vertex not in visited:
+                self.log_message(f"Iniciando verificação para o vértice: {vertex}.")
                 if has_cycle(vertex):
                     cycle_count += 1
 
