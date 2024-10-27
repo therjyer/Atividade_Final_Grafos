@@ -1,6 +1,7 @@
 import tkinter as tk
 import networkx as nx
 import matplotlib.pyplot as plt
+from scipy.optimize import linear_sum_assignment
 from tkinter import messagebox, simpledialog
 from collections import deque
 import heapq
