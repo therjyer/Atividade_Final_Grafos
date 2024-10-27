@@ -35,6 +35,7 @@ class VerificationApp:
         tk.Button(self.root, text="Check Vertex Adjacency", command=self.check_vertex_adjacency).pack()
         tk.Button(self.root, text="Check Independent Vertex Set", command=self.check_independent_set).pack()
         tk.Button(self.root, text="Check Clique", command=self.check_clique).pack()
+        tk.Button(self.root, text="Check Dominating Set", command=self.check_dominating_set).pack()
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -154,6 +155,51 @@ class VerificationApp:
         self.log_message("The set is a clique.")
         messagebox.showinfo("Clique", "The set is a clique.")
 
+    def check_dominating_set(self):
+        self.log_text.delete(1.0, tk.END)
+        self.log_message("Starting verification of specified dominating set...")
+
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+        all_vertices = set(adjacency_matrix.keys())
+
+        vertices_input = simpledialog.askstring("Input", "Enter the set of vertices (comma separated):")
+        if not vertices_input:
+            self.log_message("No vertices provided.")
+            return
+
+        test_set = {v.strip() for v in vertices_input.split(',')}
+        
+        covered_vertices = set(test_set)
+
+        for vertex in test_set:
+            if vertex in adjacency_matrix:
+                for neighbor in adjacency_matrix[vertex]:
+                    if adjacency_matrix[vertex][neighbor] != 0:
+                        covered_vertices.add(neighbor)
+
+        if covered_vertices == all_vertices:
+            for vertex in test_set:
+                temp_set = test_set - {vertex}
+                temp_covered = set(temp_set)
+                for v in temp_set:
+                    if v in adjacency_matrix:
+                        for neighbor in adjacency_matrix[v]:
+                            if adjacency_matrix[v][neighbor] != 0:
+                                temp_covered.add(neighbor)
+                if temp_covered == all_vertices:
+                    self.log_message(f"The specified set {test_set} is not minimal.")
+                    messagebox.showerror("Not a Minimal Dominating Set", f"The specified set {test_set} is not minimal.")
+                    return
+            self.log_message(f"The specified set {test_set} is a minimal dominating set.")
+            messagebox.showinfo("Minimal Dominating Set", f"The specified set {test_set} is a minimal dominating set.")
+        else:
+            missing_vertices = all_vertices - covered_vertices
+            self.log_message(f"The specified set is not a dominating set. Missing vertices: {', '.join(missing_vertices)}.")
+            messagebox.showerror("Not a Dominating Set", f"The specified set is not a dominating set. Missing vertices: {', '.join(missing_vertices)}.")
 
 if __name__ == "__main__":
     root = tk.Tk()

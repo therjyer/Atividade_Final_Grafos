@@ -20,10 +20,10 @@ Observação: Ao receber o grafo de entrada, o programa deverá ser capaz de 
 6. ~~Informar quantos e quais são os componentes fortemente conexos de um dı́grafo.~~
 7. ~~Gerar uma ordenação topológica de um dı́grafo acı́clico.~~
 8. ~~Verificar se um grafo é euleriano. Caso seja possı́vel, informar um ciclo euleriano.~~
-9. Verificar se um dado conjunto de vértices é:
+9. ~~Verificar se um dado conjunto de vértices é:~~
    1.  ~~Um conjunto independente;~~
    2.  ~~Um clique;~~
-   3.  Um conjunto dominante.
+   3.  ~~Um conjunto dominante.~~
 10. Verificar se um grafo é planar.
 11. Caso seja possı́vel, encontrar um caminho mais curto (grafo não-ponderado) ou de menor custo (grafo ponderado) entre dois vértices.
 12. Encontrar uma árvore geradora mı́nima de um grafo ponderado. Apenas grafos não-orientados serão usados neste item.
