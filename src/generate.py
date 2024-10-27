@@ -27,10 +27,18 @@ class VerificationApp:
         self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, *self.graph_names)
         self.graph_menu.pack()
         
+        self.log_text = tk.Text(self.root, height=15, width=50)
+        self.log_text.pack()
+        
         tk.Button(self.root, text="Check Edge Existence", command=self.check_edge).pack()
         tk.Button(self.root, text="Check Vertex Degree", command=self.check_vertex_degree).pack()
         tk.Button(self.root, text="Check Vertex Adjacency", command=self.check_vertex_adjacency).pack()
         tk.Button(self.root, text="Check Independent Vertex Set", command=self.check_independent_set).pack()
+        tk.Button(self.root, text="Check Clique", command=self.check_clique).pack()
+
+    def log_message(self, message):
+        self.log_text.insert(tk.END, message + "\n")
+        self.log_text.see(tk.END)
 
     def get_selected_graph(self):
         graph_name = self.selected_graph.get()
@@ -87,7 +95,7 @@ class VerificationApp:
                 messagebox.showerror("Error", f"Vertex {vertex} does not exist in the graph.")
 
     def check_independent_set(self):
-        self.log_text.delete(1.0, tk.END)  # Limpar o log anterior
+        self.log_text.delete(1.0, tk.END)
         self.log_message("Starting independent set verification...")
 
         graph_info = self.get_selected_graph()
@@ -113,6 +121,39 @@ class VerificationApp:
 
         self.log_message("The set is independent.")
         messagebox.showinfo("Independent Set", "The set is independent.")
+
+    def check_clique(self):
+        self.log_text.delete(1.0, tk.END)  # Limpar o log anterior
+        self.log_message("Starting clique verification...")
+
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+
+        vertices_input = simpledialog.askstring("Input", "Enter the set of vertices (comma separated):")
+        if not vertices_input:
+            self.log_message("No vertices provided.")
+            return
+
+        vertices = vertices_input.split(',')
+        vertices = [v.strip() for v in vertices]
+
+        for i, v1 in enumerate(vertices):
+            for v2 in vertices[i+1:]:
+                if v1 in adjacency_matrix and v2 in adjacency_matrix[v1] and adjacency_matrix[v1][v2] == 0:
+                    self.log_message(f"Vertices {v1} and {v2} are not adjacent. The set is not a clique.")
+                    messagebox.showerror("Not a Clique", f"Vertices {v1} and {v2} are not adjacent. The set is not a clique.")
+                    return
+                elif v1 not in adjacency_matrix or v2 not in adjacency_matrix[v1]:
+                    self.log_message(f"Vertices {v1} and {v2} are not adjacent. The set is not a clique.")
+                    messagebox.showerror("Not a Clique", f"Vertices {v1} and {v2} are not adjacent. The set is not a clique.")
+                    return
+
+        self.log_message("The set is a clique.")
+        messagebox.showinfo("Clique", "The set is a clique.")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
