@@ -51,25 +51,31 @@ class VerificationApp:
         adjacency_matrix = graph_info['adjacency_matrix']
 
         def is_directed():
+            self.log_message("Verificando se o grafo é direcionado...")
             for u in adjacency_matrix:
                 for v in adjacency_matrix[u]:
                     if adjacency_matrix[u][v] != adjacency_matrix[v].get(u, 0):
+                        self.log_message(f"Grafo não é direcionado: {u} -> {v} e {v} não é {u}.")
                         return True
+            self.log_message("O grafo é direcionado.")
             return False
 
         def is_acyclic():
+            self.log_message("Verificando se o grafo é acíclico...")
             visited = set()
             recursion_stack = set()
 
             def dfs(v):
                 visited.add(v)
                 recursion_stack.add(v)
+                self.log_message(f"Visitando vértice: {v}")
                 for neighbor in adjacency_matrix[v]:
                     if adjacency_matrix[v][neighbor] != 0:
                         if neighbor not in visited:
                             if dfs(neighbor):
                                 return True
                         elif neighbor in recursion_stack:
+                            self.log_message(f"Ciclo encontrado ao visitar: {neighbor}")
                             return True
                 recursion_stack.remove(v)
                 return False
@@ -77,10 +83,13 @@ class VerificationApp:
             for vertex in adjacency_matrix:
                 if vertex not in visited:
                     if dfs(vertex):
+                        self.log_message("O grafo contém um ciclo.")
                         return False
+            self.log_message("O grafo é acíclico.")
             return True
 
         def topological_sort():
+            self.log_message("Gerando ordenação topológica...")
             visited = set()
             stack = []
 
@@ -90,6 +99,7 @@ class VerificationApp:
                     if adjacency_matrix[v][neighbor] != 0 and neighbor not in visited:
                         dfs(neighbor)
                 stack.append(v)
+                self.log_message(f"Vértice {v} adicionado à pilha.")
 
             for vertex in adjacency_matrix:
                 if vertex not in visited:
