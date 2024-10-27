@@ -25,10 +25,10 @@ Observação: Ao receber o grafo de entrada, o programa deverá ser capaz de 
    2.  ~~Um clique;~~
    3.  ~~Um conjunto dominante.~~
 10. ~~Verificar se um grafo é planar.~~
-11. Caso seja possı́vel:
+11. ~~Caso seja possı́vel:~~
     1.  ~~Encontrar um caminho mais curto (grafo não-ponderado) entre dois vértices.~~
     2.  ~~Encontrar um caminho de menor custo (grafo ponderado) entre dois vértices.~~
-12. Encontrar uma árvore geradora mı́nima de um grafo ponderado. Apenas grafos não-orientados serão usados neste item.
+12. ~~Encontrar uma árvore geradora mı́nima de um grafo ponderado. Apenas grafos não-orientados serão usados neste item.~~
 13. Implementar o Algoritmo Húngaro. Esse algoritmo será testado em um grafo bipartido completo ponderado.
 
 <h3 style="text-align:center;">Dependências:</h3>

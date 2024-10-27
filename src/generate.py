@@ -1,4 +1,6 @@
 import tkinter as tk
+import networkx as nx
+import matplotlib.pyplot as plt
 from tkinter import messagebox, simpledialog
 from collections import deque
 import heapq
@@ -40,6 +42,7 @@ class VerificationApp:
         tk.Button(self.root, text="Check Dominating Set", command=self.check_dominating_set).pack()
         tk.Button(self.root, text="Find Shortest Path", command=self.find_shortest_path).pack()
         tk.Button(self.root, text="Find Lowest Cost Path", command=self.find_lowest_cost_path).pack()
+        tk.Button(self.root, text="Find Minimum Spanning Tree (MST)", command=self.find_mst).pack()
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -347,6 +350,86 @@ class VerificationApp:
                         heapq.heappush(priority_queue, (new_cost, neighbor, path + [neighbor]))
 
         return None, float('inf')
+
+    def find_mst(self):
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        if not graph_info.get('has_weights', False) or graph_info.get('type') != "undirected":
+            messagebox.showerror("Error", "MST can only be found for weighted, undirected graphs.")
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+        mst, total_weight = self.kruskal_mst(adjacency_matrix)
+
+        if mst:
+            edges = [f"{u}-{v} (weight {w})" for u, v, w in mst]
+            self.log_message("Minimum Spanning Tree found with total weight: " + str(total_weight))
+            self.log_message("Edges in the MST:\n" + "\n".join(edges))
+            messagebox.showinfo("MST", "Minimum Spanning Tree found:\n" + "\n".join(edges) + f"\nTotal Weight: {total_weight}")
+        else:
+            self.log_message("No MST found.")
+            messagebox.showerror("MST", "No MST found.")
+    
+        self.draw_mst(mst)
+
+    def kruskal_mst(self, adjacency_matrix):
+        edges = []
+        for u in adjacency_matrix:
+            for v, weight in adjacency_matrix[u].items():
+                if u < v and weight > 0:
+                    edges.append((weight, u, v))
+
+        edges.sort()
+        mst = []
+        total_weight = 0
+
+        parent = {}
+        rank = {}
+
+        def find(vertex):
+            if parent[vertex] != vertex:
+                parent[vertex] = find(parent[vertex])
+            return parent[vertex]
+
+        def union(vertex1, vertex2):
+            root1 = find(vertex1)
+            root2 = find(vertex2)
+            if root1 != root2:
+                if rank[root1] > rank[root2]:
+                    parent[root2] = root1
+                elif rank[root1] < rank[root2]:
+                    parent[root1] = root2
+                else:
+                    parent[root2] = root1
+                    rank[root1] += 1
+
+        for vertex in adjacency_matrix:
+            parent[vertex] = vertex
+            rank[vertex] = 0
+
+        for weight, u, v in edges:
+            if find(u) != find(v):
+                union(u, v)
+                mst.append((u, v, weight))
+                total_weight += weight
+
+        return mst, total_weight
+
+    def draw_mst(self, mst):
+        G = nx.Graph()
+        for u, v, weight in mst:
+            G.add_edge(u, v, weight=weight)
+
+        pos = nx.spring_layout(G)  # Layout para o grafo
+        edge_labels = {(u, v): f"{weight}" for u, v, weight in mst}
+
+        plt.figure(figsize=(8, 6))
+        nx.draw(G, pos, with_labels=True, node_size=500, node_color="skyblue", font_size=10, font_weight="bold")
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color="red")
+        plt.title("Minimum Spanning Tree (MST)")
+        plt.show()
 
 if __name__ == "__main__":
     root = tk.Tk()
