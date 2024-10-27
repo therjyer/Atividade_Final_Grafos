@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, simpledialog
+from collections import deque
+import heapq
 import json
 import os
 
@@ -37,6 +39,7 @@ class VerificationApp:
         tk.Button(self.root, text="Check Clique", command=self.check_clique).pack()
         tk.Button(self.root, text="Check Dominating Set", command=self.check_dominating_set).pack()
         tk.Button(self.root, text="Find Shortest Path", command=self.find_shortest_path).pack()
+        tk.Button(self.root, text="Find Lowest Cost Path", command=self.find_lowest_cost_path).pack()
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -225,8 +228,6 @@ class VerificationApp:
             messagebox.showerror("No Path", f"No path exists between {start_vertex} and {end_vertex}.")
 
     def bfs_shortest_path(self, adjacency_matrix, start, goal):
-        from collections import deque
-
         queue = deque([[start]])
         visited = set()
 
@@ -248,6 +249,56 @@ class VerificationApp:
 
         return None
 
+    def find_lowest_cost_path(self):
+        graph_info = self.get_selected_graph()
+        if not graph_info:
+            return
+
+        if not graph_info.get('has_weights', False):
+            messagebox.showerror("Error", "This function only works for weighted graphs.")
+            return
+
+        adjacency_matrix = graph_info['adjacency_matrix']
+        start_vertex = simpledialog.askstring("Input", "Enter the starting vertex:")
+        end_vertex = simpledialog.askstring("Input", "Enter the ending vertex:")
+
+        if start_vertex not in adjacency_matrix or end_vertex not in adjacency_matrix:
+            messagebox.showerror("Error", "One or both vertices do not exist in the graph.")
+            return
+
+        path, cost = self.dijkstra_shortest_path(adjacency_matrix, start_vertex, end_vertex)
+        if path:
+            self.log_message(f"Lowest cost path from {start_vertex} to {end_vertex}: " + " -> ".join(path) + f" with cost {cost}")
+            messagebox.showinfo("Lowest Cost Path", f"Lowest cost path from {start_vertex} to {end_vertex}: " + " -> ".join(path) + f" with cost {cost}")
+        else:
+            self.log_message(f"No path exists between {start_vertex} and {end_vertex}.")
+            messagebox.showerror("No Path", f"No path exists between {start_vertex} and {end_vertex}.")
+
+    def dijkstra_shortest_path(self, adjacency_matrix, start, goal):
+        min_costs = {vertex: float('inf') for vertex in adjacency_matrix}
+        min_costs[start] = 0
+        priority_queue = [(0, start, [start])]
+        visited = set()
+
+        while priority_queue:
+            current_cost, current_vertex, path = heapq.heappop(priority_queue)
+
+            if current_vertex in visited:
+                continue
+
+            visited.add(current_vertex)
+
+            if current_vertex == goal:
+                return path, current_cost
+
+            for neighbor, weight in adjacency_matrix[current_vertex].items():
+                if weight > 0 and neighbor not in visited:
+                    new_cost = current_cost + weight
+                    if new_cost < min_costs[neighbor]:
+                        min_costs[neighbor] = new_cost
+                        heapq.heappush(priority_queue, (new_cost, neighbor, path + [neighbor]))
+
+        return None, float('inf')
 
 if __name__ == "__main__":
     root = tk.Tk()
