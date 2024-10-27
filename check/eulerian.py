@@ -54,10 +54,13 @@ class VerificationApp:
         adjacency_matrix = graph_info['adjacency_matrix']
 
         def is_directed():
+            self.log_message("Verificando se o grafo é direcionado...")
             for u in adjacency_matrix:
                 for v in adjacency_matrix[u]:
                     if adjacency_matrix[u][v] != adjacency_matrix[v].get(u, 0):
+                        self.log_message(f"Grafo não é direcionado: {u} -> {v} e {v} não é {u}.")
                         return True
+            self.log_message("O grafo é direcionado.")
             return False
 
         def is_directed_eulerian():
@@ -79,6 +82,7 @@ class VerificationApp:
                     return False
 
             def is_weakly_connected():
+                self.log_message("Verificando se o grafo é fraco-conectado...")
                 visited = set()
                 def dfs(v):
                     visited.add(v)
@@ -97,12 +101,14 @@ class VerificationApp:
                 self.log_message("O grafo não é fraco-conectado. O grafo não é Euleriano.")
                 return False
 
+            self.log_message("O grafo é direcionado e fraco-conectado.")
             return True
 
         def is_undirected_eulerian():
             self.log_message("Verificando se todos os vértices têm grau par...")
 
             def is_connected():
+                self.log_message("Verificando se o grafo é conectado...")
                 visited = set()
                 def dfs(v):
                     visited.add(v)
