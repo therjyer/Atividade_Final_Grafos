@@ -10,28 +10,42 @@ class VerificationApp:
         self.root.title("Verificações de Grafos")
         self.graph_data = {}
         self.graph_names = []
-        self.load_graphs()
-        self.create_widgets()
+        
+        self.selected_graph = tk.StringVar(value="Escolha um grafo")  # Inicializa a variável aqui
+        self.create_widgets()  # Cria os widgets
+        self.load_graphs()     # Depois carrega os grafos
 
     def load_graphs(self):
+        self.log_message("Tentando carregar grafos do arquivo...")
         if not os.path.exists("../lib/adjacency_matrix.json"):
             messagebox.showerror("Erro", "Arquivo não encontrado.")
+            self.log_message("Erro: Arquivo não encontrado.")
             self.root.destroy()
             return
         with open("../lib/adjacency_matrix.json", "r") as f:
             self.graph_data = json.load(f)
         self.graph_names = list(self.graph_data.keys())
+        self.update_graph_menu()  # Atualiza o menu com os grafos carregados
+        self.log_message(f"{len(self.graph_names)} grafos carregados com sucesso.")
 
     def create_widgets(self):
         tk.Label(self.root, text="Selecione um grafo para verificação:").pack()
-        self.selected_graph = tk.StringVar(value="Escolha um grafo")
-        self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, *self.graph_names)
+        
+        self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, "Escolha um grafo")  # Opção padrão
         self.graph_menu.pack()
         
         self.log_text = tk.Text(self.root, height=15, width=50)
         self.log_text.pack()
         
         tk.Button(self.root, text="Encontrar Caminho de Menor Custo", command=self.find_lowest_cost_path).pack()
+
+    def update_graph_menu(self):
+        # Remove todas as opções existentes e adiciona as novas
+        menu = self.graph_menu["menu"]
+        menu.delete(0, "end")
+        for graph_name in self.graph_names:
+            menu.add_command(label=graph_name, command=lambda value=graph_name: self.selected_graph.set(value))
+        self.selected_graph.set(self.graph_names[0] if self.graph_names else "Escolha um grafo")  # Define a opção selecionada
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -63,12 +77,14 @@ class VerificationApp:
 
         if self.has_negative_cycle(adjacency_matrix, start_vertex):
             self.log_message("O grafo tem um ciclo negativo. Usando Bellman-Ford para o caminho mais curto.")
-            path, cost = self.bellman_ford_shortest_path(adjacency_matrix, start_vertex, end_vertex)
+            path, cost, predecessors = self.bellman_ford_shortest_path(adjacency_matrix, start_vertex, end_vertex)
         else:
-            path, cost = self.dijkstra_shortest_path(adjacency_matrix, start_vertex, end_vertex)
+            path, cost, predecessors = self.dijkstra_shortest_path(adjacency_matrix, start_vertex, end_vertex)
 
         if path:
             self.log_message(f"Caminho de menor custo de {start_vertex} a {end_vertex}: " + " -> ".join(path) + f" com custo {cost}")
+            self.log_message("Vértices escolhidos: " + " -> ".join(path))
+            self.log_message("Antecessores: " + ", ".join([f"{v}: {p}" for v, p in predecessors.items() if p is not None]))
             messagebox.showinfo("Caminho de Menor Custo", f"Caminho de menor custo de {start_vertex} a {end_vertex}: " + " -> ".join(path) + f" com custo {cost}")
         else:
             self.log_message(f"Nenhum caminho existe entre {start_vertex} e {end_vertex}.")
@@ -104,9 +120,10 @@ class VerificationApp:
                     if weight != 0 and min_costs[u] != float('inf') and min_costs[u] + weight < min_costs[v]:
                         min_costs[v] = min_costs[u] + weight
                         predecessors[v] = u
+                        self.log_message(f"Atualizando custo de {v} para {min_costs[v]} (predecessor: {u})")
 
         if min_costs[goal] == float('inf'):
-            return None, float('inf')
+            return None, float('inf'), {}
 
         path = []
         current = goal
@@ -114,13 +131,14 @@ class VerificationApp:
             path.insert(0, current)
             current = predecessors[current]
 
-        return path, min_costs[goal]
+        return path, min_costs[goal], predecessors
 
     def dijkstra_shortest_path(self, adjacency_matrix, start, goal):
         min_costs = {vertex: float('inf') for vertex in adjacency_matrix}
         min_costs[start] = 0
         priority_queue = [(0, start, [start])]
         visited = set()
+        predecessors = {vertex: None for vertex in adjacency_matrix}
 
         while priority_queue:
             current_cost, current_vertex, path = heapq.heappop(priority_queue)
@@ -129,18 +147,21 @@ class VerificationApp:
                 continue
 
             visited.add(current_vertex)
+            self.log_message(f"Visitando {current_vertex} com custo atual {current_cost}")
 
             if current_vertex == goal:
-                return path, current_cost
+                return path, current_cost, predecessors
 
             for neighbor, weight in adjacency_matrix[current_vertex].items():
                 if weight > 0 and neighbor not in visited:
                     new_cost = current_cost + weight
                     if new_cost < min_costs[neighbor]:
                         min_costs[neighbor] = new_cost
+                        predecessors[neighbor] = current_vertex  # Atualizando o antecessor
                         heapq.heappush(priority_queue, (new_cost, neighbor, path + [neighbor]))
+                        self.log_message(f"Atualizando custo de {neighbor} para {new_cost} (predecessor: {current_vertex})")
 
-        return None, float('inf')
+        return None, float('inf'), {}
 
 if __name__ == "__main__":
     root = tk.Tk()

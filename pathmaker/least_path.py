@@ -7,7 +7,7 @@ import os
 class VerificationApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Verificações de grafos")
+        self.root.title("Verificações de Grafos")
         self.graph_data = {}
         self.graph_names = []
         self.load_graphs()
@@ -58,9 +58,12 @@ class VerificationApp:
             messagebox.showerror("Erro", "Um ou ambos os vértices não existem no grafo.")
             return
 
-        path = self.bfs_shortest_path(adjacency_matrix, start_vertex, end_vertex)
+        path, predecessors, levels = self.bfs_shortest_path(adjacency_matrix, start_vertex, end_vertex)
+
         if path:
             self.log_message(f"Caminho mais curto de {start_vertex} para {end_vertex}: " + " -> ".join(path))
+            self.log_message(f"Antecessores: {', '.join(f'{k}: {v}' for k, v in predecessors.items())}")
+            self.log_message(f"Níveis: {', '.join(f'{k}: {v}' for k, v in levels.items())}")
             messagebox.showinfo("Caminho Mais Curto", f"Caminho mais curto de {start_vertex} para {end_vertex}: " + " -> ".join(path))
         else:
             self.log_message(f"Não existe caminho entre {start_vertex} e {end_vertex}.")
@@ -69,24 +72,33 @@ class VerificationApp:
     def bfs_shortest_path(self, adjacency_matrix, start, goal):
         queue = deque([[start]])
         visited = set()
+        predecessors = {}
+        levels = {start: 0}
+        level = 0
 
         while queue:
-            path = queue.popleft()
-            vertex = path[-1]
+            level += 1
+            for _ in range(len(queue)):
+                path = queue.popleft()
+                vertex = path[-1]
 
-            if vertex == goal:
-                return path
+                if vertex == goal:
+                    return path, predecessors, levels
 
-            elif vertex not in visited:
-                for neighbor in adjacency_matrix[vertex]:
-                    if adjacency_matrix[vertex][neighbor] != 0:
-                        new_path = list(path)
-                        new_path.append(neighbor)
-                        queue.append(new_path)
+                if vertex not in visited:
+                    visited.add(vertex)
+                    self.log_message(f"Visitando vértice: {vertex}")
 
-                visited.add(vertex)
+                    for neighbor in adjacency_matrix[vertex]:
+                        if adjacency_matrix[vertex][neighbor] != 0 and neighbor not in visited:
+                            new_path = list(path)
+                            new_path.append(neighbor)
+                            queue.append(new_path)
+                            predecessors[neighbor] = vertex
+                            levels[neighbor] = level
+                            self.log_message(f"Adicionando vizinho: {neighbor}, Antecessor: {vertex}, Nível: {level}")
 
-        return None
+        return None, predecessors, levels
 
 if __name__ == "__main__":
     root = tk.Tk()
