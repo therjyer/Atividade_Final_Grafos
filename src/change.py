@@ -35,7 +35,7 @@ class ChangeGraphApp:
         tk.Button(self.root, text="Mudar Tipo de Grafo", command=self.change_graph_type).pack()
         tk.Button(self.root, text="Adicionar/Remover Vértice", command=self.modify_vertices).pack()
         tk.Button(self.root, text="Renomear Vértice", command=self.rename_vertex).pack()
-        tk.Button(self.root, text="Mudar Vértices da Aresta", command=self.change_edge_vertices).pack()
+        tk.Button(self.root, text="Mudar Aresta", command=self.change_edge_vertices).pack()
         tk.Button(self.root, text="Mudar Peso da Aresta", command=self.change_edge_weight).pack()
 
     def get_graph_info(self):
@@ -69,14 +69,14 @@ class ChangeGraphApp:
     def change_graph_type(self):
         graph_info = self.get_graph_info()
         if graph_info:
-            new_type = "não direcionado" if graph_info["type"] == "direcionado" else "direcionado"
+            new_type = "undirected" if graph_info["type"] == "directed" else "directed"
             graph_info["type"] = new_type
             self.save_changes()
 
     def modify_vertices(self):
         graph_info = self.get_graph_info()
         if graph_info:
-            choice = messagebox.askyesno("Modificar Vértices", "Você gostaria de adicionar um vértice?")
+            choice = messagebox.askyesno("Modificar Vértices", "O que você gostaria de modificar? (Sim para adicionar / Não para remover)")
             if choice:
                 new_vertex = simpledialog.askstring("Adicionar Vértice", "Digite o nome do novo vértice:")
                 if new_vertex and new_vertex not in graph_info["adjacency_matrix"]:
