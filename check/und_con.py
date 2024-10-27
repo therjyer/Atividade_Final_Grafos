@@ -44,6 +44,9 @@ class VerificationApp:
         return self.graph_data[graph_name]
 
     def check_if_undirected_and_connected(self):
+        self.log_text.delete(1.0, tk.END)
+        self.log_message("Iniciando a verificação se o grafo é não direcionado e conectado...")
+
         graph_info = self.get_selected_graph()
         if not graph_info:
             return
@@ -51,14 +54,19 @@ class VerificationApp:
         adjacency_matrix = graph_info['adjacency_matrix']
 
         def is_undirected():
+            self.log_message("Verificando se o grafo é não direcionado...")
             for u in adjacency_matrix:
                 for v in adjacency_matrix[u]:
                     if adjacency_matrix[u][v] != adjacency_matrix[v].get(u, 0):
+                        self.log_message(f"Grafo é direcionado: {u} -> {v} diferente de {v} -> {u}.")
                         return False
+            self.log_message("O grafo é não direcionado.")
             return True
 
         def is_connected():
+            self.log_message("Verificando se o grafo está conectado...")
             visited = set()
+
             def dfs(v):
                 visited.add(v)
                 for neighbor in adjacency_matrix[v]:
@@ -68,7 +76,12 @@ class VerificationApp:
             initial_vertex = next(iter(adjacency_matrix))
             dfs(initial_vertex)
 
-            return len(visited) == len(adjacency_matrix)
+            if len(visited) == len(adjacency_matrix):
+                self.log_message("O grafo está conectado.")
+                return True
+            else:
+                self.log_message("O grafo não está conectado.")
+                return False
 
         if is_undirected():
             if is_connected():
