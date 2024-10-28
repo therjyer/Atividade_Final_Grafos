@@ -11,9 +11,9 @@ class VerificationApp:
         self.graph_data = {}
         self.graph_names = []
         
-        self.selected_graph = tk.StringVar(value="Escolha um grafo")  # Inicializa a variável aqui
-        self.create_widgets()  # Cria os widgets
-        self.load_graphs()     # Depois carrega os grafos
+        self.selected_graph = tk.StringVar(value="Escolha um grafo")
+        self.create_widgets()
+        self.load_graphs()
 
     def load_graphs(self):
         self.log_message("Tentando carregar grafos do arquivo...")
@@ -25,13 +25,13 @@ class VerificationApp:
         with open("../lib/adjacency_matrix.json", "r") as f:
             self.graph_data = json.load(f)
         self.graph_names = list(self.graph_data.keys())
-        self.update_graph_menu()  # Atualiza o menu com os grafos carregados
+        self.update_graph_menu()
         self.log_message(f"{len(self.graph_names)} grafos carregados com sucesso.")
 
     def create_widgets(self):
         tk.Label(self.root, text="Selecione um grafo para verificação:").pack()
         
-        self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, "Escolha um grafo")  # Opção padrão
+        self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, "Escolha um grafo")
         self.graph_menu.pack()
         
         self.log_text = tk.Text(self.root, height=20, width=70)
@@ -40,12 +40,11 @@ class VerificationApp:
         tk.Button(self.root, text="Encontrar Caminho de Menor Custo", command=self.find_lowest_cost_path).pack(pady=20)
 
     def update_graph_menu(self):
-        # Remove todas as opções existentes e adiciona as novas
         menu = self.graph_menu["menu"]
         menu.delete(0, "end")
         for graph_name in self.graph_names:
             menu.add_command(label=graph_name, command=lambda value=graph_name: self.selected_graph.set(value))
-        self.selected_graph.set(self.graph_names[0] if self.graph_names else "Escolha um grafo")  # Define a opção selecionada
+        self.selected_graph.set(self.graph_names[0] if self.graph_names else "Escolha um grafo")
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -157,7 +156,7 @@ class VerificationApp:
                     new_cost = current_cost + weight
                     if new_cost < min_costs[neighbor]:
                         min_costs[neighbor] = new_cost
-                        predecessors[neighbor] = current_vertex  # Atualizando o antecessor
+                        predecessors[neighbor] = current_vertex
                         heapq.heappush(priority_queue, (new_cost, neighbor, path + [neighbor]))
                         self.log_message(f"Atualizando custo de {neighbor} para {new_cost} (predecessor: {current_vertex})")
 

@@ -44,7 +44,7 @@ class VerificationApp:
         return self.graph_data[graph_name]
 
     def check_click(self):
-        self.log_text.delete(1.0, tk.END)  # Limpar o log anterior
+        self.log_text.delete(1.0, tk.END)
         self.log_message("Iniciando verificação de clique...")
 
         graph_info = self.get_selected_graph()
@@ -74,7 +74,7 @@ class VerificationApp:
                     messagebox.showerror("Não é um Clique", f"Vértice {v2} não existe no grafo.")
                     return
                 
-                if adjacency_matrix[v1].get(v2, 1) == 0:  # Verifica se a aresta não existe
+                if adjacency_matrix[v1].get(v2, 1) == 0:
                     self.log_message(f"Vértices {v1} e {v2} não são adjacentes. O conjunto não é um clique.")
                     messagebox.showerror("Não é um Clique", f"Vértices {v1} e {v2} não são adjacentes. O conjunto não é um clique.")
                     return

@@ -52,7 +52,6 @@ canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
 
 canvas.configure(yscrollcommand=scrollbar.set)
 
-# Adiciona o Canvas e a Scrollbar na interface
 canvas.pack(side="left", fill="both", expand=True)
 scrollbar.pack(side="right", fill="y")
 
@@ -61,6 +60,6 @@ with open('../lib/adjacency_matrix.json', 'r') as file:
 
 graph_names = list(data.keys())
 
-create_graph_buttons(scrollable_frame, graph_names)  # Cria os botões para cada grafo
+create_graph_buttons(scrollable_frame, graph_names)
 
 root.mainloop()
