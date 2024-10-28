@@ -189,43 +189,6 @@
             }
         }
     },
-    "graph_1": {
-        "type": "directed",
-        "has_weights": false,
-        "adjacency_matrix": {
-            "A": {
-                "A": 0
-            }
-        }
-    },
-    "graph_2": {
-        "type": "undirected",
-        "has_weights": true,
-        "adjacency_matrix": {
-            "B": {
-                "B": 0,
-                "C": 1
-            },
-            "C": {
-                "B": 1,
-                "C": 0
-            }
-        }
-    },
-    "graph_3": {
-        "type": "directed",
-        "has_weights": true,
-        "adjacency_matrix": {
-            "D": {
-                "D": 0,
-                "E": 2
-            },
-            "E": {
-                "D": 1,
-                "E": 0
-            }
-        }
-    },
     "graph_4": {
         "type": "undirected",
         "has_weights": false,
@@ -261,62 +224,6 @@
             }
         }
     },
-    "graph_6": {
-        "type": "undirected",
-        "has_weights": true,
-        "adjacency_matrix": {
-            "K": {
-                "K": 0,
-                "L": 3,
-                "M": 4
-            },
-            "L": {
-                "K": 3,
-                "L": 0,
-                "M": 1
-            },
-            "M": {
-                "K": 4,
-                "L": 1,
-                "M": 0
-            }
-        }
-    },
-    "graph_7": {
-        "type": "directed",
-        "has_weights": true,
-        "adjacency_matrix": {
-            "N": {
-                "N": 0,
-                "O": 5
-            },
-            "O": {
-                "N": 0,
-                "O": 0
-            }
-        }
-    },
-    "graph_8": {
-        "type": "undirected",
-        "has_weights": false,
-        "adjacency_matrix": {
-            "P": {
-                "P": 0,
-                "Q": 1,
-                "R": 1
-            },
-            "Q": {
-                "P": 1,
-                "Q": 0,
-                "R": 0
-            },
-            "R": {
-                "P": 1,
-                "Q": 0,
-                "R": 0
-            }
-        }
-    },
     "graph_9": {
         "type": "directed",
         "has_weights": false,
@@ -328,90 +235,6 @@
             "T": {
                 "S": 0,
                 "T": 0
-            }
-        }
-    },
-    "graph_10": {
-        "type": "undirected",
-        "has_weights": true,
-        "adjacency_matrix": {
-            "U": {
-                "U": 0,
-                "V": 2
-            },
-            "V": {
-                "U": 2,
-                "V": 0
-            }
-        }
-    },
-    "graph_11": {
-        "type": "directed",
-        "has_weights": true,
-        "adjacency_matrix": {
-            "W": {
-                "W": 0,
-                "X": 4,
-                "Y": 1
-            },
-            "X": {
-                "W": 0,
-                "X": 0,
-                "Y": 2
-            },
-            "Y": {
-                "W": 0,
-                "X": 0,
-                "Y": 0
-            }
-        }
-    },
-    "graph_12": {
-        "type": "undirected",
-        "has_weights": false,
-        "adjacency_matrix": {
-            "Z": {
-                "Z": 0,
-                "A1": 1
-            },
-            "A1": {
-                "Z": 1,
-                "A1": 0
-            }
-        }
-    },
-    "graph_13": {
-        "type": "directed",
-        "has_weights": false,
-        "adjacency_matrix": {
-            "A2": {
-                "A2": 0,
-                "A3": 1
-            },
-            "A3": {
-                "A2": 0,
-                "A3": 0
-            }
-        }
-    },
-    "graph_14": {
-        "type": "undirected",
-        "has_weights": true,
-        "adjacency_matrix": {
-            "A4": {
-                "A4": 0,
-                "A5": 2,
-                "A6": 3
-            },
-            "A5": {
-                "A4": 2,
-                "A5": 0,
-                "A6": 4
-            },
-            "A6": {
-                "A4": 3,
-                "A5": 4,
-                "A6": 0
             }
         }
     },
@@ -443,15 +266,6 @@
             }
         }
     },
-    "graph_17": {
-        "type": "directed",
-        "has_weights": false,
-        "adjacency_matrix": {
-            "B2": {
-                "B2": 0
-            }
-        }
-    },
     "graph_18": {
         "type": "undirected",
         "has_weights": true,
@@ -477,15 +291,6 @@
             "B6": {
                 "B5": 1,
                 "B6": 0
-            }
-        }
-    },
-    "graph_20": {
-        "type": "undirected",
-        "has_weights": false,
-        "adjacency_matrix": {
-            "B7": {
-                "B7": 0
             }
         }
     }

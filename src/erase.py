@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 import json
 import os
 
@@ -10,6 +10,23 @@ class EraseGraphApp:
 
         self.graph_data = {}
         self.load_graphs()
+
+        self.canvas = tk.Canvas(self.root)
+        self.scrollbar = ttk.Scrollbar(self.root, orient="vertical", command=self.canvas.yview)
+        self.scrollable_frame = tk.Frame(self.canvas)
+
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        )
+
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.scrollbar.pack(side="right", fill="y")
+
         self.create_widgets()
 
     def load_graphs(self):
@@ -24,30 +41,28 @@ class EraseGraphApp:
         self.graph_names = list(self.graph_data.keys())
 
     def create_widgets(self):
-        tk.Label(self.root, text="Selecione um grafo para apagar:").pack(pady=10)
-        
-        self.selected_graph = tk.StringVar(value="Escolha um grafo")
-        self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, *self.graph_names)
-        self.graph_menu.pack(pady=10)
+        tk.Label(self.scrollable_frame, text="Selecione um grafo para apagar:").pack(pady=10)
 
-        tk.Button(self.root, text="Apagar Grafo", command=self.delete_graph).pack(pady=10)
+        for graph_name in self.graph_names:
+            button = tk.Button(self.scrollable_frame, text=graph_name, command=lambda name=graph_name: self.confirm_delete(name))
+            button.pack(pady=5, fill='x')
 
-    def delete_graph(self):
-        graph_name = self.selected_graph.get()
-        if graph_name == "Escolha um grafo" or graph_name not in self.graph_data:
-            messagebox.showerror("Erro", "Por favor, selecione um grafo válido para apagar.")
-            return
-
+    def confirm_delete(self, graph_name):
         confirm = messagebox.askyesno("Confirmar Exclusão", f"Você tem certeza que deseja apagar o grafo '{graph_name}'?")
         if confirm:
             del self.graph_data[graph_name]
             self.save_changes()
             messagebox.showinfo("Apagado", f"Grafo '{graph_name}' foi apagado.")
+            self.refresh_buttons()
 
     def save_changes(self):
         with open("../lib/adjacency_matrix.json", "w") as f:
             json.dump(self.graph_data, f, indent=4)
-        messagebox.showinfo("Salvo", "Alterações salvas em adjacency_matrix.json")
+
+    def refresh_buttons(self):
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
+        self.create_widgets()
 
 if __name__ == "__main__":
     root = tk.Tk()

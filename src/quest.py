@@ -15,7 +15,6 @@ class MainApp:
         tk.Button(self.root, text="Verificar Adjacência do Vértice", command=self.check_vertex_adjacency).pack(pady=10)
         tk.Button(self.root, text="Verificar Grau do Vértice", command=self.check_vertex_degree).pack(pady=10)
         
-
     def check_click(self):
         result = subprocess.run(["python", "click.py"], capture_output=True, text=True, cwd="../gen")
         print(result.stdout)
