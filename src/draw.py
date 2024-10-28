@@ -30,21 +30,37 @@ def draw_graph_from_json(file_path, graph_name):
     plt.title(graph_name)
     plt.show()
 
-def on_select(event):
-    selected_graph = graph_var.get()
-    draw_graph_from_json('../lib/adjacency_matrix.json', selected_graph)
+def create_graph_buttons(frame, graph_names):
+    for graph_name in graph_names:
+        button = tk.Button(frame, text=graph_name, command=lambda name=graph_name: draw_graph_from_json('../lib/adjacency_matrix.json', name))
+        button.pack(pady=10, fill='x')
 
 root = tk.Tk()
 root.title("Seleção de Grafo")
+root.geometry("640x480") 
+
+canvas = tk.Canvas(root)
+scrollbar = ttk.Scrollbar(root, orient="vertical", command=canvas.yview)
+scrollable_frame = tk.Frame(canvas)
+
+scrollable_frame.bind(
+    "<Configure>",
+    lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+)
+
+canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+
+canvas.configure(yscrollcommand=scrollbar.set)
+
+# Adiciona o Canvas e a Scrollbar na interface
+canvas.pack(side="left", fill="both", expand=True)
+scrollbar.pack(side="right", fill="y")
 
 with open('../lib/adjacency_matrix.json', 'r') as file:
     data = json.load(file)
 
 graph_names = list(data.keys())
 
-graph_var = tk.StringVar(value=graph_names[0])  # Valor inicial
-
-option_menu = ttk.OptionMenu(root, graph_var, graph_var.get(), *graph_names, command=on_select)
-option_menu.pack(pady=20)
+create_graph_buttons(scrollable_frame, graph_names)  # Cria os botões para cada grafo
 
 root.mainloop()
