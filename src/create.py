@@ -18,12 +18,12 @@ class GraphApp:
         self.create_widgets()
 
     def create_widgets(self):
-        tk.Label(self.root, text="Escolha o Tipo de Grafo:").pack()
+        tk.Label(self.root, text="Escolha o Tipo de Grafo:").pack(pady=10)
         self.graph_type_var = tk.StringVar(value="directed")
-        tk.Radiobutton(self.root, text="Dirigido", variable=self.graph_type_var, value="directed").pack()
-        tk.Radiobutton(self.root, text="Não Dirigido", variable=self.graph_type_var, value="undirected").pack()
+        tk.Radiobutton(self.root, text="Dirigido", variable=self.graph_type_var, value="directed").pack(pady=10)
+        tk.Radiobutton(self.root, text="Não Dirigido", variable=self.graph_type_var, value="undirected").pack(pady=10)
 
-        tk.Button(self.root, text="Próximo", command=self.get_graph_name).pack()
+        tk.Button(self.root, text="Próximo", command=self.get_graph_name).pack(pady=10)
 
     def get_graph_name(self):
         self.graph_name = simpledialog.askstring("Nome do Grafo", "Digite um nome único para este grafo:")
@@ -34,10 +34,10 @@ class GraphApp:
         self.graph_type = self.graph_type_var.get()
         vertices_input = simpledialog.askstring("Vértices", "Digite os vértices separados por vírgulas (ex.: A,B,C):")
         if vertices_input:
-            self.vertices = [v.strip().upper() for v in vertices_input.split(",")]  # Normalizando para maiúsculas
+            self.vertices = [v.strip().upper() for v in vertices_input.split(",")]
             self.adjacency_matrix = {v: {u: 0 for u in self.vertices} for v in self.vertices}
-            print("Vértices:", self.vertices)  # Debug: Verificação de vértices
-            print("Matriz de Adjacência inicial:", self.adjacency_matrix)  # Debug: Verificação da matriz
+            print("Vértices:", self.vertices)
+            print("Matriz de Adjacência inicial:", self.adjacency_matrix)
             self.get_edges()
 
     def get_edges(self):
@@ -45,10 +45,10 @@ class GraphApp:
         if edges_input:
             edges = edges_input.replace(" ", "").split(",")
             for edge in edges:
-                v1, v2 = [x.upper() for x in edge.split("-")]  # Normalizando para maiúsculas
+                v1, v2 = [x.upper() for x in edge.split("-")]
                 if v1 in self.vertices and v2 in self.vertices:
                     self.edges.append((v1, v2))
-            print("Arestas:", self.edges)  # Debug: Verificação de arestas
+            print("Arestas:", self.edges)
             self.ask_weights()
 
     def ask_weights(self):
@@ -58,7 +58,7 @@ class GraphApp:
 
     def create_adjacency_matrix(self):
         for v1, v2 in self.edges:
-            print(f"Adicionando aresta {v1}-{v2}")  # Debug: Verificação da aresta sendo adicionada
+            print(f"Adicionando aresta {v1}-{v2}")
             if self.has_weights:
                 weight = simpledialog.askinteger("Peso", f"Digite o peso para a aresta {v1}-{v2}:")
             else:
@@ -66,7 +66,7 @@ class GraphApp:
             self.adjacency_matrix[v1][v2] = weight
             if self.graph_type == "undirected" and v1 != v2:
                 self.adjacency_matrix[v2][v1] = weight
-        print("Matriz de Adjacência final:", self.adjacency_matrix)  # Debug: Verificação da matriz final
+        print("Matriz de Adjacência final:", self.adjacency_matrix)
         self.save_to_json()
 
     def save_to_json(self):
@@ -103,5 +103,6 @@ class GraphApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("640x480")
     app = GraphApp(root)
     root.mainloop()

@@ -1,4 +1,4 @@
-import tkinter as tk
+import tkinter as tk 
 from scipy.optimize import linear_sum_assignment
 from tkinter import messagebox
 import json
@@ -28,10 +28,10 @@ class VerificationApp:
         self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, *self.graph_names)
         self.graph_menu.pack()
         
-        self.log_text = tk.Text(self.root, height=15, width=50)
+        self.log_text = tk.Text(self.root, height=20, width=70)
         self.log_text.pack()
         
-        tk.Button(self.root, text="Encontrar Alocação Mínima", command=self.find_minimum_allocation).pack()
+        tk.Button(self.root, text="Encontrar Alocação Mínima", command=self.find_minimum_allocation).pack(pady=20)
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -58,6 +58,23 @@ class VerificationApp:
         self.log_message("Conversão concluída.")
         return undirected_matrix
 
+    def convert_to_bipartite(self, adjacency_matrix):
+        self.log_message("Convertendo o grafo em um bipartido completo e ponderado...")
+        vertices = list(adjacency_matrix.keys())
+        mid_point = len(vertices) // 2
+
+        bipartite_matrix = {f'left_{v}': {} for v in vertices[:mid_point]}
+        bipartite_matrix.update({f'right_{v}': {} for v in vertices[mid_point:]})
+
+        for u in bipartite_matrix.keys():
+            for v in bipartite_matrix.keys():
+                if u != v:
+                    weight = adjacency_matrix.get(u.replace('left_', ''), {}).get(v.replace('right_', ''), 1)
+                    bipartite_matrix[u][v] = weight
+
+        self.log_message("Conversão concluída.")
+        return bipartite_matrix
+
     def find_minimum_allocation(self):
         self.log_text.delete(1.0, tk.END)
         self.log_message("Iniciando a busca pela alocação mínima...")
@@ -67,10 +84,10 @@ class VerificationApp:
             return
 
         if not graph_info.get('has_weights', False):
-            messagebox.showerror("Erro", "A alocação mínima só se aplica a gráficos bipartidos completos e ponderados.")
-            return
-
-        adjacency_matrix = self.make_undirected(graph_info['adjacency_matrix'])
+            self.log_message("Transformando em bipartido completo e ponderado.")
+            adjacency_matrix = self.convert_to_bipartite(graph_info['adjacency_matrix'])
+        else:
+            adjacency_matrix = self.make_undirected(graph_info['adjacency_matrix'])
 
         cost_matrix = []
         vertices = list(adjacency_matrix.keys())
@@ -88,8 +105,9 @@ class VerificationApp:
         self.log_message(f"Alocação mínima com custo {min_cost}:")
         self.log_message("\n".join(allocation))
         messagebox.showinfo("Alocação Mínima", f"Alocação mínima com custo {min_cost}:\n" + "\n".join(allocation))
-        
+
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("640x480")
     app = VerificationApp(root)
     root.mainloop()

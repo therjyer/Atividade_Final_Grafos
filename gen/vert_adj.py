@@ -10,12 +10,11 @@ class VerificationApp:
         self.graph_data = {}
         self.graph_names = []
         
-        # Criação do widget de log imediatamente
-        self.log_text = tk.Text(self.root, height=15, width=50)
+        self.log_text = tk.Text(self.root, height=20, width=70)
         self.log_text.pack()
 
         self.log_message("Inicializando o aplicativo...")
-        self.create_widgets()  # Criar widgets que não dependem de grafos
+        self.create_widgets()
         self.load_graphs()
         self.log_message("Aplicativo inicializado.")
 
@@ -31,7 +30,6 @@ class VerificationApp:
         self.graph_names = list(self.graph_data.keys())
         self.log_message(f"{len(self.graph_names)} grafos carregados com sucesso.")
         
-        # Atualiza o OptionMenu após carregar os grafos
         self.update_graph_menu()
 
     def create_widgets(self):
@@ -40,20 +38,18 @@ class VerificationApp:
         
         self.selected_graph = tk.StringVar(value="Escolha um grafo")
         
-        # Criar o OptionMenu sem opções inicialmente
         self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, "")
         self.graph_menu.pack()
 
-        tk.Button(self.root, text="Verificar Adjacência do Vértice", command=self.check_vertex_adjacency).pack()
+        tk.Button(self.root, text="Verificar Adjacência do Vértice", command=self.check_vertex_adjacency).pack(pady=20)
         self.log_message("Widgets criados.")
 
     def update_graph_menu(self):
-        # Atualiza as opções do OptionMenu com os grafos carregados
         menu = self.graph_menu['menu']
-        menu.delete(0, 'end')  # Limpa opções existentes
+        menu.delete(0, 'end')
         for name in self.graph_names:
             menu.add_command(label=name, command=lambda value=name: self.selected_graph.set(value))
-        self.selected_graph.set("Escolha um grafo")  # Define valor padrão
+        self.selected_graph.set("Escolha um grafo")
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -93,5 +89,6 @@ class VerificationApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("640x480")
     app = VerificationApp(root)
     root.mainloop()

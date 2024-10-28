@@ -12,8 +12,7 @@ class VerificationApp:
         self.graph_data = {}
         self.graph_names = []
 
-        # Criação do widget de log
-        self.log_text = tk.Text(self.root, height=15, width=50)
+        self.log_text = tk.Text(self.root, height=20, width=70)
         self.log_text.pack()
 
         self.load_graphs()
@@ -42,7 +41,7 @@ class VerificationApp:
         self.start_vertex_entry = tk.Entry(self.root, textvariable=self.start_vertex)
         self.start_vertex_entry.pack()
 
-        tk.Button(self.root, text="Encontrar Árvore Geradora Mínima (AGM)", command=self.find_mst).pack()
+        tk.Button(self.root, text="Encontrar Árvore Geradora Mínima (AGM)", command=self.find_mst).pack(pady=20)
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -124,7 +123,6 @@ class VerificationApp:
             parent[vertex] = vertex
             rank[vertex] = 0
 
-        # Inicia a busca pela AGM a partir do vértice selecionado
         if start_vertex in adjacency_matrix:
             selected_vertices.append(start_vertex)
             for weight, u, v in edges:
@@ -134,7 +132,7 @@ class VerificationApp:
                     total_weight += weight
                     selected_vertices.append(u)
                     selected_vertices.append(v)
-                    predecessors[v] = u  # Armazenando o antecessor
+                    predecessors[v] = u
         else:
             self.log_message(f"Vértice inicial {start_vertex} não existe no grafo.")
             return [], 0, [], {}
@@ -157,5 +155,6 @@ class VerificationApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("640x480")
     app = VerificationApp(root)
     root.mainloop()

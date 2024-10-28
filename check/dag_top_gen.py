@@ -22,15 +22,15 @@ class VerificationApp:
         self.graph_names = list(self.graph_data.keys())
 
     def create_widgets(self):
-        tk.Label(self.root, text="Selecione um grafo para verificação:").pack()
+        tk.Label(self.root, text="Selecione um grafo para verificação:").pack(pady=5)
         self.selected_graph = tk.StringVar(value="Escolha um grafo")
         self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, *self.graph_names)
-        self.graph_menu.pack()
+        self.graph_menu.pack(pady=5)
         
-        self.log_text = tk.Text(self.root, height=15, width=50)
-        self.log_text.pack()
+        self.log_text = tk.Text(self.root, height=20, width=70)
+        self.log_text.pack(pady=5)
         
-        tk.Button(self.root, text="Gerar uma Ordenação Topológica em um DAG", command=self.check_dag_and_topological_sort).pack()
+        tk.Button(self.root, text="Gerar uma Ordenação Topológica em um DAG", command=self.check_dag_and_topological_sort).pack(pady=20)
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -119,5 +119,6 @@ class VerificationApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("640x480")
     app = VerificationApp(root)
     root.mainloop()

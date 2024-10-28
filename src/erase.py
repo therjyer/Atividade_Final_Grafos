@@ -24,13 +24,13 @@ class EraseGraphApp:
         self.graph_names = list(self.graph_data.keys())
 
     def create_widgets(self):
-        tk.Label(self.root, text="Selecione um grafo para apagar:").pack()
+        tk.Label(self.root, text="Selecione um grafo para apagar:").pack(pady=10)
         
         self.selected_graph = tk.StringVar(value="Escolha um grafo")
         self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, *self.graph_names)
-        self.graph_menu.pack()
+        self.graph_menu.pack(pady=10)
 
-        tk.Button(self.root, text="Apagar Grafo", command=self.delete_graph).pack()
+        tk.Button(self.root, text="Apagar Grafo", command=self.delete_graph).pack(pady=10)
 
     def delete_graph(self):
         graph_name = self.selected_graph.get()
@@ -51,5 +51,6 @@ class EraseGraphApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("640x480")
     app = EraseGraphApp(root)
     root.mainloop()

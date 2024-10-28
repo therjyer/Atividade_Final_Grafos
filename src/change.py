@@ -25,18 +25,18 @@ class ChangeGraphApp:
         self.graph_names = list(self.graph_data.keys())
 
     def create_widgets(self):
-        tk.Label(self.root, text="Selecione um grafo para editar:").pack()
+        tk.Label(self.root, text="Selecione um grafo para editar:").pack(pady=10)
         
         self.selected_graph = tk.StringVar(value="Escolha um grafo")
         self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, *self.graph_names)
-        self.graph_menu.pack()
+        self.graph_menu.pack(pady=10)
 
-        tk.Button(self.root, text="Renomear Grafo", command=self.rename_graph).pack()
-        tk.Button(self.root, text="Mudar Tipo de Grafo", command=self.change_graph_type).pack()
-        tk.Button(self.root, text="Adicionar/Remover Vértice", command=self.modify_vertices).pack()
-        tk.Button(self.root, text="Renomear Vértice", command=self.rename_vertex).pack()
-        tk.Button(self.root, text="Mudar Aresta", command=self.change_edge_vertices).pack()
-        tk.Button(self.root, text="Mudar Peso da Aresta", command=self.change_edge_weight).pack()
+        tk.Button(self.root, text="Renomear Grafo", command=self.rename_graph).pack(pady=10)
+        tk.Button(self.root, text="Mudar Tipo de Grafo", command=self.change_graph_type).pack(pady=10)
+        tk.Button(self.root, text="Adicionar/Remover Vértice", command=self.modify_vertices).pack(pady=10)
+        tk.Button(self.root, text="Renomear Vértice", command=self.rename_vertex).pack(pady=10)
+        tk.Button(self.root, text="Mudar Aresta", command=self.change_edge_vertices).pack(pady=10)
+        tk.Button(self.root, text="Mudar Peso da Aresta", command=self.change_edge_weight).pack(pady=10)
 
     def get_graph_info(self):
         self.graph_name = self.selected_graph.get()
@@ -140,5 +140,6 @@ class ChangeGraphApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("640x480")
     app = ChangeGraphApp(root)
     root.mainloop()

@@ -34,10 +34,10 @@ class VerificationApp:
         self.graph_menu = tk.OptionMenu(self.root, self.selected_graph, "Escolha um grafo")  # Opção padrão
         self.graph_menu.pack()
         
-        self.log_text = tk.Text(self.root, height=15, width=50)
+        self.log_text = tk.Text(self.root, height=20, width=70)
         self.log_text.pack()
         
-        tk.Button(self.root, text="Encontrar Caminho de Menor Custo", command=self.find_lowest_cost_path).pack()
+        tk.Button(self.root, text="Encontrar Caminho de Menor Custo", command=self.find_lowest_cost_path).pack(pady=20)
 
     def update_graph_menu(self):
         # Remove todas as opções existentes e adiciona as novas
@@ -165,5 +165,6 @@ class VerificationApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("640x480")
     app = VerificationApp(root)
     root.mainloop()
