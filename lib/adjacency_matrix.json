@@ -203,27 +203,6 @@
             }
         }
     },
-    "graph_5": {
-        "type": "directed",
-        "has_weights": false,
-        "adjacency_matrix": {
-            "H": {
-                "H": 0,
-                "I": 1,
-                "J": 1
-            },
-            "I": {
-                "H": 0,
-                "I": 0,
-                "J": 1
-            },
-            "J": {
-                "H": 0,
-                "I": 0,
-                "J": 0
-            }
-        }
-    },
     "graph_9": {
         "type": "directed",
         "has_weights": false,
