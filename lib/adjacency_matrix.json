@@ -189,45 +189,119 @@
             }
         }
     },
-    "graph_4": {
+    "graph_example": {
+        "type": "directed",
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 0,
+                "E": 0,
+                "D": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0,
+                "D": 0,
+                "E": 0,
+                "C": 1
+            },
+            "C": {
+                "A": 0,
+                "B": 0,
+                "C": 0,
+                "E": 0,
+                "D": 1
+            },
+            "D": {
+                "A": 1,
+                "B": 0,
+                "C": 0,
+                "D": 0,
+                "E": 0
+            },
+            "E": {
+                "A": 0,
+                "B": 0,
+                "C": 0,
+                "D": 1,
+                "E": 0
+            }
+        }
+    },
+    "eulerian_graph": {
         "type": "undirected",
+        "is_bipartite": false,
+        "is_complete": false,
         "has_weights": false,
         "adjacency_matrix": {
-            "F": {
-                "F": 0,
-                "G": 1
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 1,
+                "D": 0
             },
-            "G": {
-                "F": 1,
-                "G": 0
+            "B": {
+                "A": 1,
+                "B": 0,
+                "C": 0,
+                "D": 1
+            },
+            "C": {
+                "A": 1,
+                "B": 0,
+                "C": 0,
+                "D": 1
+            },
+            "D": {
+                "A": 0,
+                "B": 1,
+                "C": 1,
+                "D": 0
             }
         }
     },
-    "graph_9": {
-        "type": "directed",
+    "exemplo_clique": {
+        "type": "undirected",
+        "is_bipartite": false,
+        "is_complete": false,
         "has_weights": false,
         "adjacency_matrix": {
-            "S": {
-                "S": 0,
-                "T": 1
+            "A": {
+                "A": 0,
+                "B": 1,
+                "C": 1,
+                "D": 1,
+                "E": 0
             },
-            "T": {
-                "S": 0,
-                "T": 0
-            }
-        }
-    },
-    "graph_15": {
-        "type": "directed",
-        "has_weights": true,
-        "adjacency_matrix": {
-            "A7": {
-                "A7": 0,
-                "A8": 1
+            "B": {
+                "A": 1,
+                "B": 0,
+                "C": 1,
+                "D": 1,
+                "E": 0
             },
-            "A8": {
-                "A7": 0,
-                "A8": 0
+            "C": {
+                "A": 1,
+                "B": 1,
+                "C": 0,
+                "D": 1,
+                "E": 1
+            },
+            "D": {
+                "A": 1,
+                "B": 1,
+                "C": 1,
+                "D": 0,
+                "E": 1
+            },
+            "E": {
+                "A": 0,
+                "B": 0,
+                "C": 1,
+                "D": 1,
+                "E": 0
             }
         }
     },
@@ -270,6 +344,64 @@
             "B6": {
                 "B5": 1,
                 "B6": 0
+            }
+        }
+    },
+    "grafo1": {
+        "type": "undirected",
+        "has_weights": true,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 0
+            },
+            "B": {
+                "A": 2,
+                "B": 0,
+                "C": 0,
+                "D": 0
+            },
+            "C": {
+                "A": 0,
+                "B": 0,
+                "C": 0,
+                "D": 4
+            },
+            "D": {
+                "A": 0,
+                "B": 0,
+                "C": 4,
+                "D": 0
+            }
+        }
+    },
+    "grafo2": {
+        "type": "undirected",
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 0,
+                "B": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 0
+            }
+        }
+    },
+    "grafo3": {
+        "type": "undirected",
+        "has_weights": false,
+        "adjacency_matrix": {
+            "A": {
+                "A": 1,
+                "B": 0
+            },
+            "B": {
+                "A": 0,
+                "B": 1
             }
         }
     }

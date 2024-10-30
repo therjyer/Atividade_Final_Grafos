@@ -45,9 +45,12 @@ class GraphApp:
         if edges_input:
             edges = edges_input.replace(" ", "").split(",")
             for edge in edges:
-                v1, v2 = [x.upper() for x in edge.split("-")]
-                if v1 in self.vertices and v2 in self.vertices:
-                    self.edges.append((v1, v2))
+                if "-" in edge:
+                    v1, v2 = [x.upper() for x in edge.split("-")]
+                    if v1 in self.vertices and v2 in self.vertices:
+                        self.edges.append((v1, v2))
+                else:
+                    messagebox.showwarning("Entrada Inválida", f"A aresta '{edge}' não está no formato correto (ex.: A-B).")
             print("Arestas:", self.edges)
             self.ask_weights()
 

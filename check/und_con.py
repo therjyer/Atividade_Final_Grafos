@@ -30,7 +30,7 @@ class VerificationApp:
         self.log_text = tk.Text(self.root, height=20, width=70)
         self.log_text.pack()
         
-        tk.Button(self.root, text="Verificar se o Grafo é Não Direcionado e Conectado", command=self.check_if_undirected_and_connected).pack(pady=20)
+        tk.Button(self.root, text="Verificar se o Grafo é Não Direcionado e conexo", command=self.check_if_undirected_and_connected).pack(pady=20)
 
     def log_message(self, message):
         self.log_text.insert(tk.END, message + "\n")
@@ -45,7 +45,7 @@ class VerificationApp:
 
     def check_if_undirected_and_connected(self):
         self.log_text.delete(1.0, tk.END)
-        self.log_message("Iniciando a verificação se o grafo é não direcionado e conectado...")
+        self.log_message("Iniciando a verificação se o grafo é não direcionado e conexo...")
 
         graph_info = self.get_selected_graph()
         if not graph_info:
@@ -64,7 +64,7 @@ class VerificationApp:
             return True
 
         def is_connected():
-            self.log_message("Verificando se o grafo está conectado...")
+            self.log_message("Verificando se o grafo está conexo...")
             visited = set()
 
             def dfs(v):
@@ -77,17 +77,17 @@ class VerificationApp:
             dfs(initial_vertex)
 
             if len(visited) == len(adjacency_matrix):
-                self.log_message("O grafo está conectado.")
+                self.log_message("O grafo é conexo.")
                 return True
             else:
-                self.log_message("O grafo não está conectado.")
+                self.log_message("O grafo não é conexo.")
                 return False
 
         if is_undirected():
             if is_connected():
-                messagebox.showinfo("Verificação do Grafo", "O grafo é não direcionado e conectado.")
+                messagebox.showinfo("Verificação do Grafo", "O grafo é não direcionado e conexo.")
             else:
-                messagebox.showinfo("Verificação do Grafo", "O grafo é não direcionado, mas não está conectado.")
+                messagebox.showinfo("Verificação do Grafo", "O grafo é não direcionado, mas não é conexo.")
         else:
             messagebox.showinfo("Verificação do Grafo", "O grafo é direcionado.")
 
